@@ -8,8 +8,6 @@ Nowoczesna aplikacja webowa do obliczania wymaganej i rzeczywistej masy hamując
 Podgląd strony w widoku DESKTOP.
 ![alt text](image.png)
 
-Podgląd strony w widoku MOBILNYM.
-![alt text](91313055-17FD-4B51-9F2B-6C83D7897CB0.jpeg)
 ## 🚀 Główne funkcje
 
 *   **Zgodność z przepisami:** Algorytm obliczeniowy oparty na krajowych instrukcjach kolejowych, co minimalizuje ryzyko błędu ludzkiego.
