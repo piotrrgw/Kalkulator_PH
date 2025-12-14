@@ -232,23 +232,22 @@
           noLoadSplitForBraking: true
         }
       },
-      "SKPL": {
-        "SN84": {
-          label: "SN84 - SKPL",
-          length: 78.8,
-          mo: { prozny: 0, ladowny: 0 },
-          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
-        },
-        "SD85": {
-          label: "SD85 - SKPL",
-          length: 44.8,
-          mo: { prozny: 0, ladowny: 0 },
-          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
-        }
-      }
+      // "SKPL": {
+      //   "SN84": {
+      //     label: "SN84 - SKPL",
+      //     length: 78.8,
+      //     mo: { prozny: 0, ladowny: 0 },
+      //     braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
+      //   },
+      //   "SD85": {
+      //     label: "SD85 - SKPL",
+      //     length: 44.8,
+      //     mo: { prozny: 0, ladowny: 0 },
+      //     braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
+      //   }
+      // }
     };
 
-    // Tworzymy płaską strukturę do łatwego wyszukiwania pojazdów, zachowując logikę w reszcie skryptu
     const PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
 
     const presetButtons = document.getElementById('presetButtons');
