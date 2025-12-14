@@ -241,7 +241,7 @@
         },
         "SD85": {
           label: "SD85 - SKPL",
-          length: 25,
+          length: 44.8,
           mo: { prozny: 0, ladowny: 0 },
           braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
         }
@@ -274,7 +274,7 @@
     let userEditedMO = false;
     let userEditedMHR = false;
 
-    Object.keys(PRESET_GROUPS).forEach(groupName => {
+    Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
       const groupHeader = document.createElement('div');
       groupHeader.className = 'group-header';
       groupHeader.textContent = groupName;
