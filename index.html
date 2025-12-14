@@ -50,7 +50,9 @@
 
     .presets{ display:flex; flex-direction:column; gap:14px; }
     .panel{ border-radius:10px; padding:12px; background:linear-gradient(180deg,#ffffff,#fbfdff); border:1px solid rgba(1,38,63,0.05); box-shadow:0 6px 18px rgba(2,12,34,0.04); }
+    .panel-header{ text-align:center; }
     .presets h3{ margin:6px 0 10px 0; font-size:16px; color:var(--dark-navy) }
+    .group-header{ width:100%; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:12px 0 4px 0; letter-spacing:0.5px; }
 
     .vehicle-list{ display:flex; gap:8px; flex-wrap:wrap; }
     .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; }
@@ -71,7 +73,13 @@
     footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:center; }
     footer a{ color:var(--cyan); text-decoration:none; font-weight:700; }
 
-    @media (max-width:980px){ .container{ grid-template-columns: 1fr; } .grid-table{ grid-template-columns: 40% 1fr; } .cell.left{ font-size:13px; padding:12px } }
+    @media (max-width:980px){
+      .container{ display:flex; flex-direction:column; }
+      .grid-table{ grid-template-columns: 40% 1fr; } .cell.left{ font-size:13px; padding:12px }
+      .panel-header{ text-align:left; }
+      .calculator-panel { order: 2; }
+      .presets-panel { order: 1; }
+    }
     @media (max-width:540px){
       .grid-table{ grid-template-columns: 1fr; }
       .cell.left{ text-align:left; justify-content:flex-start; padding-left:16px }
@@ -87,7 +95,7 @@
 
   
   <main class="container">
-    <section class="card">
+    <section class="card calculator-panel">
       <h2 style="margin:0 0 12px 0; font-size:16px;">Kalkulator</h2>
 
       <div class="grid-table">
@@ -130,6 +138,14 @@
 	<div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
           </div>
         </div>
+
+        <div class="grid-row" id="dlugosc-skladu-row" style="display: none;">
+          <div class="cell left">Długość składu (m)</div>
+          <div class="cell right">
+            <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0 m">
+            <div class="note">Suma długości predefiniowanych pojazdów.</div>
+          </div>
+        </div>
       </div>
 
       <div style="display:flex; gap:12px; margin-top:14px;">
@@ -140,22 +156,13 @@
       <div id="status" class="errors"></div>
 
       <footer>
-        Projekt stworzony przez <strong>NAVI 🚀</strong> – <a href="https://chatgpt.com" target="_blank">chatgpt.com</a> oraz Piotr M 🚂
-           <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-W05T4L1HFD');
-</script>
+        <span id="copyright"></span> Stworzone przez Piotra M 🚂 przy pomocy <strong>NAVI 🚀</strong>.
       </footer>
     </section>
 
-    <aside class="presets">
+    <aside class="presets presets-panel">
       <div class="panel">
-        <center> <h3>Predefiniowane składy zespolone <br><br>PAMIĘTAJ! <br> WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU</h3> </center>
+        <div class="panel-header"> <h3>Predefiniowane składy zespolone <br><br>PAMIĘTAJ! <br> WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU</h3> </div>
         <div class="vehicle-list" id="presetButtons"></div>
 
         <div style="margin-top:12px; display:flex; gap:12px;">
@@ -171,11 +178,15 @@
         <div style="display:flex; justify-content:space-between; gap:8px;">
           <div>
             <div style="font-size:13px; color:var(--muted)">Suma MO (t)</div>
-            <div id="sum-mop" class="result">0</div>
+            <div id="sum-mo" class="result">0</div>
           </div>
           <div>
             <div style="font-size:13px; color:var(--muted)">Suma MHR (t)</div>
             <div id="sum-mhr" class="result">0</div>
+          </div>
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Długość (m)</div>
+            <div id="sum-len" class="result">0</div>
           </div>
         </div>
       </div>
@@ -183,74 +194,73 @@
   </main>
 
   <script>
-    const PRESETS = {
+    const PRESET_GROUPS = {
+      "PESA": {
         "ED74": {
-        label: "ED74",
-        mo: { prozny: 161, ladowny: 171 },
-        braking: {
-          "R+Mg": { prozny: 0, ladowny: 0 },
-          "R": { prozny: 0, ladowny: 0 }
-        }
-      },
-      "ED160-stary": {
-        label: "ED160 STARY",
-        mo: { prozny: 252, ladowny: 281 },
-        braking: {
-          "R+E+Mg": { prozny: 466, ladowny: 520 },
-          "R+Mg": { prozny: 458, ladowny: 511 },
-          "R": { prozny: 426, ladowny: 475 }
-        }
-      },
-      "ED160-nowy": {
-        label: "ED160 NOWY",
-        mo: { prozny: 252, ladowny: 281 },
-        braking: {
-          "R+Mg": { prozny: 478, ladowny: 533 },
-          "R": { prozny: 428, ladowny: 477 }
-        }
-      },
-      "ED161": {
-        label: "ED161",
-        mo: { prozny: 249, ladowny: 278 },
-        braking: {
-          "R+Mg": { prozny: 408, ladowny: 454 },
-          "R": { prozny: 386, ladowny: 430 }
-        }
-      },
-      "ED250": {
-        label: "ED250",
-        mo: { prozny: 414, ladowny: 445 },
-        braking: {
-          "R+Mg": 915,
-          "R": 773
+          label: "ED74",
+          length: 80.3,
+          mo: { prozny: 161, ladowny: 171 },
+          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
         },
-        noLoadSplitForBraking: true
-      },
-      "SN84": {
-        label: "SN84 - SKPL",
-        mo: { prozny: 0, ladowny: 0 },
-        braking: {
-          "R+Mg": { prozny: 0, ladowny: 0 },
-          "R": { prozny: 0, ladowny: 0 }
+        "ED161": {
+          label: "ED161",
+          length: 150.2,
+          mo: { prozny: 249, ladowny: 278 },
+          braking: { "R+Mg": { prozny: 408, ladowny: 454 }, "R": { prozny: 386, ladowny: 430 } }
         }
       },
-      "SD85": {
-        label: "SD85 - SKPL",
-        mo: { prozny: 0, ladowny: 0 },
-        braking: {
-          "R+Mg": { prozny: 0, ladowny: 0 },
-          "R": { prozny: 0, ladowny: 0 }
+      "STADLER": {
+        "ED160-stary": {
+          label: "ED160 STARY",
+          length: 152.9,
+          mo: { prozny: 252, ladowny: 281 },
+          braking: { "R+E+Mg": { prozny: 466, ladowny: 520 }, "R+Mg": { prozny: 458, ladowny: 511 }, "R": { prozny: 426, ladowny: 475 } }
+        },
+        "ED160-nowy": {
+          label: "ED160 NOWY",
+          length: 152.9,
+          mo: { prozny: 252, ladowny: 281 },
+          braking: { "R+Mg": { prozny: 478, ladowny: 533 }, "R": { prozny: 428, ladowny: 477 } }
+        }
+      },
+      "ALSTOM": {
+        "ED250": {
+          label: "ED250",
+          length: 187.4,
+          mo: { prozny: 414, ladowny: 445 },
+          braking: { "R+Mg": 915, "R": 773 },
+          noLoadSplitForBraking: true
+        }
+      },
+      "SKPL": {
+        "SN84": {
+          label: "SN84 - SKPL",
+          length: 78.8,
+          mo: { prozny: 0, ladowny: 0 },
+          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
+        },
+        "SD85": {
+          label: "SD85 - SKPL",
+          length: 25,
+          mo: { prozny: 0, ladowny: 0 },
+          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
         }
       }
     };
+
+    // Tworzymy płaską strukturę do łatwego wyszukiwania pojazdów, zachowując logikę w reszcie skryptu
+    const PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
 
     const presetButtons = document.getElementById('presetButtons');
     const addPresetBtn = document.getElementById('addPreset');
     const clearAllBtn = document.getElementById('clearAll');
     const selectedList = document.getElementById('selectedList');
-    const sumMopEl = document.getElementById('sum-mop');
+    const sumMoEl = document.getElementById('sum-mo');
     const sumMhrEl = document.getElementById('sum-mhr');
+    const sumLenEl = document.getElementById('sum-len');
 
+    const dlugoscSkladuRow = document.getElementById('dlugosc-skladu-row');
+    const dlugoscSkladuField = document.getElementById('dlugosc-skladu');
     const masaPociaguInput = document.getElementById('masa-pociagu');
     const masaWymaganaField = document.getElementById('masa-wymagana');
     const masaRzeczywistaInput = document.getElementById('masa-rzeczywista');
@@ -264,17 +274,24 @@
     let userEditedMO = false;
     let userEditedMHR = false;
 
-    Object.keys(PRESETS).forEach(key=>{
-      const btn = document.createElement('button');
-      btn.className = 'vehicle-card';
-      btn.type = 'button';
-      btn.dataset.key = key;
-      btn.innerText = PRESETS[key].label;
-      btn.onclick = ()=>{
-        document.querySelectorAll('.vehicle-card').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-      };
-      presetButtons.appendChild(btn);
+    Object.keys(PRESET_GROUPS).forEach(groupName => {
+      const groupHeader = document.createElement('div');
+      groupHeader.className = 'group-header';
+      groupHeader.textContent = groupName;
+      presetButtons.appendChild(groupHeader);
+
+      Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'vehicle-card';
+        btn.type = 'button';
+        btn.dataset.key = key;
+        btn.innerText = PRESETS[key].label;
+        btn.onclick = () => {
+          document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+        presetButtons.appendChild(btn);
+      });
     });
 
     addPresetBtn.onclick = ()=>{
@@ -306,35 +323,74 @@
 
     function renderList(){
       selectedList.innerHTML="";
-      if(!selectedVehicles.length){ selectedList.innerHTML='<div style="color:var(--muted)">Brak dodanych pojazdów.</div>'; }
+      if(!selectedVehicles.length){ 
+        const emptyDiv = document.createElement('div');
+        emptyDiv.textContent = 'Brak dodanych pojazdów.';
+        emptyDiv.style.color = 'var(--muted)';
+        selectedList.appendChild(emptyDiv);
+      }
       selectedVehicles.forEach(v=>{
         const p = PRESETS[v.presetKey];
-        const div=document.createElement('div');
-        div.className='selected-item';
-        div.innerHTML=`
-          <div><div style="font-weight:800">${p.label}</div>
-          <div style="font-size:13px;color:var(--muted)">MO: ${p.mo[v.loadState]} t — Mhr: ${brakingMass(v)} t</div></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
-            <select class="small load">
-              <option value="prozny"${v.loadState==='prozny'?' selected':''}>Próżny</option>
-              <option value="ladowny"${v.loadState==='ladowny'?' selected':''}>Ładowny</option>
-            </select>
-            <select class="small brake">${Object.keys(p.braking).map(b=>`<option value="${b}"${v.brakingSetting===b?' selected':''}>${b}</option>`).join('')}</select>
-            <button class="btn remove small">Usuń</button>
-          </div>`;
-        div.querySelector('.load').onchange=e=>{v.loadState=e.target.value;renderList();};
-        div.querySelector('.brake').onchange=e=>{v.brakingSetting=e.target.value;renderList();};
-        div.querySelector('.remove').onclick=()=>{selectedVehicles=selectedVehicles.filter(x=>x.id!==v.id);renderList();};
-        selectedList.appendChild(div);
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'selected-item';
+
+        const infoDiv = document.createElement('div');
+        const labelDiv = document.createElement('div');
+        labelDiv.style.fontWeight = '800';
+        labelDiv.textContent = p.label;
+        const detailsDiv = document.createElement('div');
+        detailsDiv.style.fontSize = '13px';
+        detailsDiv.style.color = 'var(--muted)';
+        detailsDiv.textContent = `Dł: ${p.length}m — MO: ${p.mo[v.loadState]} t — Mhr: ${brakingMass(v)} t`;
+        infoDiv.append(labelDiv, detailsDiv);
+
+        const controlsDiv = document.createElement('div');
+        controlsDiv.style.display = 'flex';
+        controlsDiv.style.gap = '8px';
+        controlsDiv.style.flexWrap = 'wrap';
+        controlsDiv.style.justifyContent = 'flex-end';
+
+        const loadSelect = document.createElement('select');
+        loadSelect.className = 'small load';
+        loadSelect.innerHTML = `<option value="prozny">Próżny</option><option value="ladowny">Ładowny</option>`;
+        loadSelect.value = v.loadState;
+        loadSelect.onchange = e => { v.loadState = e.target.value; renderList(); };
+
+        const brakeSelect = document.createElement('select');
+        brakeSelect.className = 'small brake';
+        brakeSelect.innerHTML = Object.keys(p.braking).map(b => `<option value="${b}">${b}</option>`).join('');
+        brakeSelect.value = v.brakingSetting;
+        brakeSelect.onchange = e => { v.brakingSetting = e.target.value; renderList(); };
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn remove small';
+        removeBtn.textContent = 'Usuń';
+        removeBtn.onclick = () => {
+          selectedVehicles = selectedVehicles.filter(x => x.id !== v.id);
+          renderList();
+        };
+
+        controlsDiv.append(loadSelect, brakeSelect, removeBtn);
+        itemDiv.append(infoDiv, controlsDiv);
+        selectedList.appendChild(itemDiv);
       });
 
       const mo=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].mo[v.loadState],0);
       const mhr=selectedVehicles.reduce((s,v)=>s+brakingMass(v),0);
+      const len=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].length,0);
 
-      sumMopEl.textContent=mo.toFixed(1);
+      sumMoEl.textContent=mo.toFixed(1);
       sumMhrEl.textContent=mhr.toFixed(1);
+      sumLenEl.textContent=Math.ceil(len);
       if(!userEditedMO) masaPociaguInput.value=mo.toFixed(1);
       if(!userEditedMHR) masaRzeczywistaInput.value=mhr.toFixed(1);
+
+      if (selectedVehicles.length > 0) {
+        dlugoscSkladuRow.style.display = 'contents';
+        dlugoscSkladuField.value = Math.ceil(len) + ' m';
+      } else {
+        dlugoscSkladuRow.style.display = 'none';
+      }
     }
 
     masaPociaguInput.oninput=()=>userEditedMO=true;
@@ -368,6 +424,18 @@
     };
 
     renderList();
+    document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Kalkulator PH.`
   </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-W05T4L1HFD');
+  </script>
+
 </body>
 </html>
