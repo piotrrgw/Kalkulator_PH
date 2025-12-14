@@ -3,7 +3,7 @@
 Nowoczesna aplikacja webowa do obliczania wymaganej i rzeczywistej masy hamującej pociągu. Narzędzie wspiera personel kolejowy w szybkim i bezbłędnym przygotowaniu karty próby hamulca, zgodnie z przepisami obowiązującymi w Polsce (m.in. instrukcja hamulcowa PKP PLK Ir-1).
 
 > [!NOTE]
-> **[Zobacz aplikację na żywo](https://piotrrgw.github.io/Kalkulator_PH/)**
+> **[Sprawdź aplikację w działaniu](https://piotrrgw.github.io/Kalkulator_PH/)**
 
 ![alt text](image.png)
 
