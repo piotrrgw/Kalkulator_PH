@@ -5,8 +5,11 @@ Nowoczesna aplikacja webowa do obliczania wymaganej i rzeczywistej masy hamując
 > [!NOTE]
 > **[Sprawdź aplikację w działaniu](https://piotrrgw.github.io/Kalkulator_PH/)**
 
+Podgląd strony w widoku Desktop.
 ![alt text](image.png)
 
+Podgląd strony w widoku Mobilnym
+![alt text](91313055-17FD-4B51-9F2B-6C83D7897CB0.jpeg)
 ## 🚀 Główne funkcje
 
 *   **Zgodność z przepisami:** Algorytm obliczeniowy oparty na krajowych instrukcjach kolejowych, co minimalizuje ryzyko błędu ludzkiego.
