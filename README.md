@@ -1,33 +1,44 @@
 # Kalkulator Próby Hamulca (Brake Test Calculator)
 
-Specjalistyczna aplikacja webowa służąca do obliczania wymaganej masy hamującej oraz rzeczywistej masy hamującej pociągu. Narzędzie zostało zaprojektowane w celu wsparcia personelu kolejowego w szybkim i bezbłędnym przygotowaniu karty próby hamulca, zgodnie z aktualnymi przepisami i normami obowiązującymi w Polsce (regulacje PKP PLK).
+Nowoczesna aplikacja webowa do obliczania wymaganej i rzeczywistej masy hamującej pociągu. Narzędzie wspiera personel kolejowy w szybkim i bezbłędnym przygotowaniu karty próby hamulca, zgodnie z przepisami obowiązującymi w Polsce (m.in. instrukcja hamulcowa PKP PLK Ir-1).
 
-## 🚀 Kluczowe funkcjonalności
+> [!NOTE]
+> **[Zobacz aplikację na żywo](https://piotrrgw.github.io/Kalkulator_PH/)**
 
-### 1. Zgodność z przepisami
-Algorytm obliczeniowy został zaimplementowany w ścisłym oparciu o krajowe instrukcje i regulacje dotyczące hamulców kolejowych. Aplikacja automatyzuje proces doboru wymaganych wartości, minimalizując ryzyko błędu ludzkiego.
+![alt text](image.png)
 
-### 2. Dwa tryby wprowadzania danych
-Aplikacja oferuje elastyczność w zależności od rodzaju taboru:
-* **Tryb Manualny:** Pozwala na ręczne wprowadzenie wszystkich parametrów dla składów niestandardowych (np. składy wagonowe, lokomotywy luzem).
-* **Szablony EZT (Predefiniowane):** Szybki wybór popularnych Elektrycznych Zespołów Trakcyjnych (EZT). Po wyborze serii pojazdu, system automatycznie uzupełnia stałe parametry techniczne (masę własną, długość, masę hamującą), co znacząco przyspiesza proces obliczeń.
+## 🚀 Główne funkcje
 
-### 3. Walidacja wyników
-System weryfikuje poprawność wprowadzonych danych i oblicza wymagany procent ciężaru hamującego, informując użytkownika o spełnieniu (lub niespełnieniu) wymogów dla danej linii i prędkości rozkładowej.
+*   **Zgodność z przepisami:** Algorytm obliczeniowy oparty na krajowych instrukcjach kolejowych, co minimalizuje ryzyko błędu ludzkiego.
+*   **Dwa tryby pracy:**
+    *   **Tryb manualny:** Ręczne wprowadzanie parametrów dla dowolnego składu pociągu.
+    *   **Szablony EZT:** Baza predefiniowanych Elektrycznych Zespołów Trakcyjnych, która automatycznie uzupełnia dane techniczne pojazdu, przyspieszając pracę.
+*   **Walidacja w czasie rzeczywistym:** Aplikacja na bieżąco oblicza procent masy hamującej i informuje, czy skład spełnia wymogi.
+*   **Responsywność:** Interfejs dostosowany do urządzeń mobilnych (smartfony, tablety), co ułatwia pracę w terenie.
 
-## 🤖 AI-Assisted Development
+## 🛠️ Jak używać?
 
-Projekt został zrealizowany w modelu **AI-Assisted Development** przy wsparciu modelu językowego **ChatGPT**. Sztuczna inteligencja została wykorzystana do:
-* Implementacji logiki matematycznej zgodnej z przepisami branżowymi.
-* Stworzenia struktury danych dla predefiniowanych pojazdów (EZT).
-* Optymalizacji interfejsu użytkownika (UI) pod kątem czytelności w warunkach pracy operacyjnej.
+1.  Otwórz aplikację w przeglądarce internetowej.
+2.  Wybierz tryb pracy: **Manualny** lub **Szablony EZT**.
+3.  Wprowadź dane pociągu (masa, długość, masa hamująca poszczególnych pojazdów).
+4.  Podaj prędkość rozkładową i rodzaj pociągu (pasażerski/towarowy).
+5.  System automatycznie obliczy wymaganą i rzeczywistą masę hamującą oraz wskaże, czy warunki zostały spełnione.
 
-## 🛠️ Stack Technologiczny
+## 💻 Stos technologiczny
 
-* HTML5 / CSS3
-* JavaScript (ES6+)
-* Brak zewnętrznych zależności (No-Framework dependencies) - co zapewnia szybkość działania i łatwość uruchomienia na dowolnym urządzeniu (tablet, smartfon służbowy).
+*   **Frontend:** HTML5, CSS3, JavaScript (ES6+)
+*   **Podejście:** Vanilla JS (brak zewnętrznych bibliotek i frameworków), co gwarantuje maksymalną wydajność i szybkość ładowania.
 
-## ⚠️ Nota Prawna (Disclaimer)
+## 🤝 Wkład w projekt (Contributing)
 
-Aplikacja ma charakter pomocniczy i edukacyjny. Mimo dołożenia wszelkich starań, aby algorytmy były zgodne z obowiązującymi instrukcjami, ostateczna odpowiedzialność za przygotowanie pociągu do drogi i wypełnienie dokumentacji (Karta Próby Hamulca) spoczywa na uprawnionym pracowniku kolejowym. Należy zawsze weryfikować wyniki z oficjalnymi dokumentami i tabelami.
+Masz pomysł na ulepszenie aplikacji lub znalazłeś błąd? Zapraszam do tworzenia zgłoszeń (Issues) lub Pull Requestów. Każda pomoc jest mile widziana!
+
+## 💡 Informacje o dewelopmencie
+
+Projekt został stworzony w modelu **AI-Assisted Development**. Kluczowe elementy logiki biznesowej, struktury danych oraz interfejsu użytkownika zostały zaimplementowane przy wsparciu zaawansowanych modeli językowych.
+
+---
+
+> [!WARNING]
+> **Nota prawna (Disclaimer)**
+> Aplikacja ma charakter **pomocniczy i edukacyjny**. Mimo dołożenia wszelkich starań w celu zapewnienia zgodności z obowiązującymi przepisami, nie może ona zastąpić oficjalnej dokumentacji ani wiedzy uprawnionego pracownika. Ostateczna odpowiedzialność za prawidłowe przygotowanie pociągu i wypełnienie dokumentacji spoczywa na osobie wykonującej te czynności. Zawsze weryfikuj wyniki z oficjalnymi tabelami i instrukcjami.
