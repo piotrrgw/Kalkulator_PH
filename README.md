@@ -5,10 +5,10 @@ Nowoczesna aplikacja webowa do obliczania wymaganej i rzeczywistej masy hamując
 > [!NOTE]
 > **[Sprawdź aplikację w działaniu](https://piotrrgw.github.io/Kalkulator_PH/)**
 
-Podgląd strony w widoku Desktop.
+Podgląd strony w widoku DESKTOP.
 ![alt text](image.png)
 
-Podgląd strony w widoku Mobilnym
+Podgląd strony w widoku MOBILNYM.
 ![alt text](91313055-17FD-4B51-9F2B-6C83D7897CB0.jpeg)
 ## 🚀 Główne funkcje
 
