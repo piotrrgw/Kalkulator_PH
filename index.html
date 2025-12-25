@@ -232,20 +232,20 @@
           noLoadSplitForBraking: true
         }
       },
-      // "SKPL": {
-      //   "SN84": {
-      //     label: "SN84 - SKPL",
-      //     length: 78.8,
-      //     mo: { prozny: 0, ladowny: 0 },
-      //     braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
-      //   },
-      //   "SD85": {
-      //     label: "SD85 - SKPL",
-      //     length: 44.8,
-      //     mo: { prozny: 0, ladowny: 0 },
-      //     braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
-      //   }
-      // }
+       "SKPL": {
+         "SN84": {
+           label: "SN84 - SKPL",
+           length: 74.480,
+           mo: { prozny: 124, ladowny: 139 },
+           braking: { "R": { prozny: 209, ladowny: 209 } }
+         },
+         "SD85": {
+           label: "SD85 - SKPL",
+           length: 52.340,
+           mo: { prozny: 97, ladowny: 119 },
+           braking: { "R+Mg": { prozny: 143, ladowny: 143 }, "R": { prozny: 119, ladowny: 119 } }
+         }
+       }
     };
 
     const PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
