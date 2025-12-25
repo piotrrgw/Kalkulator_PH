@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kalkulator karty próby hamulca</title>
+  <style>
+    :root{
+      --dark-navy: #01263f;
+      --orange: #e16036;
+      --cyan: #009dd8;
+      --gray: #c4c4c4;
+      --muted: #545b66;
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
+      color:var(--dark-navy);
+      -webkit-font-smoothing:antialiased;
+      padding:22px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:20px;
+      margin-bottom:18px;
+    }
+    h1{ margin:0; font-weight:700; font-size:22px; }
+
+    .container{ display:grid; grid-template-columns: 1fr 420px; gap:28px; }
+
+    .card{ background:#fff; border-radius:12px; padding:18px; box-shadow: 0 8px 30px rgba(2,12,34,0.06); border:1px solid rgba(1,38,63,0.04); }
+
+    .grid-table{ width:100%; display:grid; grid-template-columns: 320px 1fr; border:3px solid var(--dark-navy); border-radius:8px; overflow:hidden; }
+    .grid-row{ display:contents; }
+    .cell{ padding:18px; border-bottom:2px solid rgba(1,38,63,0.07); border-right:2px solid rgba(1,38,63,0.07); min-height:56px; display:flex; align-items:center; }
+    .cell.left{ background: linear-gradient(180deg, rgba(1,38,63,0.02), rgba(1,38,63,0.00)); font-weight:700; text-transform:uppercase; font-size:15px; justify-content:center; text-align:center; letter-spacing:0.4px; }
+    .cell.right{ justify-content:flex-start; flex-direction:column; gap:6px; }
+
+    input[type="number"], input[type="text"], select {
+      width:100%; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid rgba(1,38,63,0.12); font-weight:700;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.2);
+    }
+
+    input.readonly{ background:linear-gradient(180deg,#fff 0%, #f7fbff 100%); border:1px solid rgba(1,38,63,0.06); }
+    .note{ font-size:12px;color:var(--muted);margin-top:4px; }
+
+    .presets{ display:flex; flex-direction:column; gap:14px; }
+    .panel{ border-radius:10px; padding:12px; background:linear-gradient(180deg,#ffffff,#fbfdff); border:1px solid rgba(1,38,63,0.05); box-shadow:0 6px 18px rgba(2,12,34,0.04); }
+    .panel-header{ text-align:center; }
+    .presets h3{ margin:6px 0 10px 0; font-size:16px; color:var(--dark-navy) }
+    .group-header{ width:100%; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:12px 0 4px 0; letter-spacing:0.5px; }
+
+    .vehicle-list{ display:flex; gap:8px; flex-wrap:wrap; }
+    .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; }
+    .vehicle-card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.08) }
+    .vehicle-card.active{ background:var(--orange); color:white; box-shadow:0 8px 22px rgba(225,96,54,0.15) }
+    .vehicle-card:focus, .btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(225, 96, 54, 0.4);
+    }
+
+
+    .selected-list{ margin-top:8px; display:flex; flex-direction:column; gap:8px; min-height:60px }
+    .selected-item{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; border:1px dashed rgba(1,38,63,0.06); background:#fff; flex-wrap:wrap; }
+    .small{ padding:6px 8px; border-radius:6px; border:1px solid rgba(1,38,63,0.06); background:transparent; font-size:14px; }
+
+    .btn{ display:inline-block; padding:12px 18px; border-radius:10px; cursor:pointer; border:0; font-weight:800; }
+    .btn.add{ background:var(--cyan); color:white }
+    .btn.remove{ background:var(--orange); color:white }
+
+    .errors{ margin-top:10px; color:#b00020; font-weight:700 }
+    .result{ font-size:18px; font-weight:800; color:var(--dark-navy); }
+
+    footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:center; }
+    footer a{ color:var(--cyan); text-decoration:none; font-weight:700; }
+
+    @media (max-width:980px){
+      .container{ display:flex; flex-direction:column; }
+      .grid-table{ grid-template-columns: 40% 1fr; } .cell.left{ font-size:13px; padding:12px }
+      .panel-header{ text-align:left; }
+      .calculator-panel { order: 2; }
+      .presets-panel { order: 1; }
+    }
+    @media (max-width:540px){
+      .grid-table{ grid-template-columns: 1fr; }
+      .cell.left{ text-align:left; justify-content:flex-start; padding-left:16px }
+      .vehicle-card{ width:100%; text-align:center; }
+      .selected-item{ flex-direction:column; align-items:stretch; }
+      .selected-item select, .selected-item button{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <header><h1>Kalkulator karty próby hamulca</h1></header>
+
+  <main class="container">
+    <section class="card calculator-panel">
+      <h2 style="margin:0 0 12px 0; font-size:16px;">Kalkulator</h2>
+
+      <div class="grid-table">
+        <div class="grid-row">
+          <div class="cell left" id="lbl-mo">Masa ogólna pociągu (MO) (t)</div>
+          <div class="cell right">
+            <input id="masa-pociagu" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mo">
+            <div class="note">Wprowadź ręcznie lub użyj predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-mhw">Masa hamująca wymagana (MHW) (t)</div>
+          <div class="cell right">
+            <input id="masa-wymagana" class="readonly" type="text" readonly value="0 t" aria-labelledby="lbl-mhw">
+            <div class="note">Obliczana jako: (MO × PW) / 100 zaokrąglana w górę.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-mhr">Masa hamująca rzeczywista (MHR) (t)</div>
+          <div class="cell right">
+            <input id="masa-rzeczywista" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mhr">
+            <div class="note">Wpisz ręcznie lub uzupełnij z predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-pw">Procent masy hamującej wymaganej (PW) (%)</div>
+          <div class="cell right">
+            <input id="percent-wymagane" type="number" min="0" max="100" step="0.1" placeholder="" aria-labelledby="lbl-pw">
+            <div class="note">Wpisz najwyższą wartość z WRJ.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-pr">Procent masy hamującej rzeczywistej (PR) (%)</div>
+          <div class="cell right">
+            <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0 %" aria-labelledby="lbl-pr">
+	        <div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
+          </div>
+        </div>
+
+        <div class="grid-row" id="dlugosc-skladu-row" style="display: none;">
+          <div class="cell left" id="lbl-len">Długość składu (m)</div>
+          <div class="cell right">
+            <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0 m" aria-labelledby="lbl-len">
+            <div class="note">Suma długości predefiniowanych pojazdów.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:14px;">
+        <button id="calcBtn" class="btn add" style="flex:1; padding:14px 22px; font-size:16px;">Oblicz</button>
+        <button id="resetBtn" class="btn remove" style="flex:1; padding:14px 22px; font-size:16px;">Resetuj</button>
+      </div>
+
+      <div id="status" class="errors" role="alert"></div>
+
+      <footer>
+        <span id="copyright"></span> Stworzone przez Piotra M 🚂 przy pomocy <strong>NAVI 🚀</strong> | Wersja aplikacji: v3.1
+      </footer>
+    </section>
+
+    <aside class="presets presets-panel">
+      <div class="panel">
+        <div class="panel-header"> <h3>Predefiniowane składy zespolone <br><br>PAMIĘTAJ! <br> WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU</h3> </div>
+        <div class="vehicle-list" id="presetButtons"></div>
+
+        <div style="margin-top:12px; display:flex; gap:12px;">
+          <button id="addPreset" class="btn add" style="flex:1;">Dodaj pojazd</button>
+          <button id="clearAll" class="btn remove" style="flex:1;">Wyczyść</button>
+        </div>
+
+        <div class="selected-list" id="selectedList" style="margin-top:12px" aria-live="polite"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Podsumowanie</h3>
+        <div style="display:flex; justify-content:space-between; gap:8px;">
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Suma MO (t)</div>
+            <div id="sum-mo" class="result">0</div>
+          </div>
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Suma MHR (t)</div>
+            <div id="sum-mhr" class="result">0</div>
+          </div>
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Długość (m)</div>
+            <div id="sum-len" class="result">0</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const PRESET_GROUPS = {
+      "PESA": {
+        "ED74": {
+          label: "ED74",
+          length: 80.3,
+          mo: { prozny: 161, ladowny: 171 },
+          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
+        },
+        "ED161": {
+          label: "ED161",
+          length: 150.2,
+          mo: { prozny: 249, ladowny: 278 },
+          braking: { "R+Mg": { prozny: 408, ladowny: 454 }, "R": { prozny: 386, ladowny: 430 } }
+        }
+      },
+      "STADLER": {
+        "ED160-stary": {
+          label: "ED160 STARY",
+          length: 152.9,
+          mo: { prozny: 252, ladowny: 281 },
+          /* Zmiana w v3.1: R+Mg przesunięte na pierwsze miejsce jako domyślne */
+          braking: { "R+Mg": { prozny: 458, ladowny: 511 }, "R+E+Mg": { prozny: 466, ladowny: 520 }, "R": { prozny: 426, ladowny: 475 } }
+        },
+        "ED160-nowy": {
+          label: "ED160 NOWY",
+          length: 152.9,
+          mo: { prozny: 252, ladowny: 281 },
+          braking: { "R+Mg": { prozny: 478, ladowny: 533 }, "R": { prozny: 428, ladowny: 477 } }
+        }
+      },
+      "ALSTOM": {
+        "ED250": {
+          label: "ED250",
+          length: 187.4,
+          mo: { prozny: 414, ladowny: 445 },
+          braking: { "R+Mg": 915, "R": 773 },
+          noLoadSplitForBraking: true
+        }
+      },
+       "SKPL": {
+         "SN84": {
+           label: "SN84 - SKPL",
+           length: 74.480,
+           mo: { prozny: 124, ladowny: 139 },
+           braking: { "R": { prozny: 209, ladowny: 209 } }
+         },
+         "SD85": {
+           label: "SD85 - SKPL",
+           length: 52.340,
+           mo: { prozny: 97, ladowny: 119 },
+           braking: { "R+Mg": { prozny: 143, ladowny: 143 }, "R": { prozny: 119, ladowny: 119 } }
+         }
+       }
+    };
+
+    const PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
+
+    const presetButtons = document.getElementById('presetButtons');
+    const addPresetBtn = document.getElementById('addPreset');
+    const clearAllBtn = document.getElementById('clearAll');
+    const selectedList = document.getElementById('selectedList');
+    const sumMoEl = document.getElementById('sum-mo');
+    const sumMhrEl = document.getElementById('sum-mhr');
+    const sumLenEl = document.getElementById('sum-len');
+
+    const dlugoscSkladuRow = document.getElementById('dlugosc-skladu-row');
+    const dlugoscSkladuField = document.getElementById('dlugosc-skladu');
+    const masaPociaguInput = document.getElementById('masa-pociagu');
+    const masaWymaganaField = document.getElementById('masa-wymagana');
+    const masaRzeczywistaInput = document.getElementById('masa-rzeczywista');
+    const percentWymaganeInput = document.getElementById('percent-wymagane');
+    const percentRzeczywisteField = document.getElementById('percent-rzeczywiste');
+    const calcBtn = document.getElementById('calcBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusDiv = document.getElementById('status');
+
+    let selectedVehicles = [];
+    let userEditedMO = false;
+    let userEditedMHR = false;
+
+    function saveState() {
+        const state = {
+            selectedVehicles: selectedVehicles,
+            mo: masaPociaguInput.value,
+            mhr: masaRzeczywistaInput.value,
+            pw: percentWymaganeInput.value,
+            userEditedMO: userEditedMO,
+            userEditedMHR: userEditedMHR
+        };
+        localStorage.setItem('kalkulator_ph_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem('kalkulator_ph_state');
+        if (saved) {
+            try {
+                const state = JSON.parse(saved);
+                selectedVehicles = state.selectedVehicles || [];
+                userEditedMO = state.userEditedMO || false;
+                userEditedMHR = state.userEditedMHR || false;
+                
+                if (state.mo) masaPociaguInput.value = state.mo;
+                if (state.mhr) masaRzeczywistaInput.value = state.mhr;
+                if (state.pw) percentWymaganeInput.value = state.pw;
+
+                renderList();
+                if(state.pw && state.mo && state.mhr) {
+                    calcBtn.click();
+                }
+            } catch (e) {
+                console.error("Błąd odczytu stanu aplikacji", e);
+                localStorage.removeItem('kalkulator_ph_state');
+            }
+        }
+    }
+
+    Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
+      const groupHeader = document.createElement('div');
+      groupHeader.className = 'group-header';
+      groupHeader.textContent = groupName;
+      presetButtons.appendChild(groupHeader);
+
+      Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'vehicle-card';
+        btn.type = 'button';
+        btn.dataset.key = key;
+        btn.innerText = PRESETS[key].label;
+        btn.onclick = () => {
+          document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+        presetButtons.appendChild(btn);
+      });
+    });
+
+    addPresetBtn.onclick = ()=>{
+      const active = document.querySelector('.vehicle-card.active');
+      if(!active){ statusDiv.textContent="Wybierz serię pojazdu."; return; }
+      addVehicle(active.dataset.key);
+      active.classList.remove('active');
+    };
+
+    clearAllBtn.onclick = ()=>{
+      selectedVehicles = [];
+      renderList();
+      saveState();
+    };
+
+    function addVehicle(key){
+      const preset = PRESETS[key];
+      const id = Date.now();
+      selectedVehicles.push({
+        /* Wybiera pierwszy klucz z obiektu braking jako domyślny */
+        id, presetKey:key, loadState:'ladowny', brakingSetting:Object.keys(preset.braking)[0]
+      });
+      renderList();
+      saveState();
+    }
+
+    function brakingMass(v){
+      const p = PRESETS[v.presetKey];
+      if(p.noLoadSplitForBraking){ return p.braking[v.brakingSetting]; }
+      return p.braking[v.brakingSetting][v.loadState];
+    }
+
+    function renderList(){
+      selectedList.innerHTML="";
+      if(!selectedVehicles.length){ 
+        const emptyDiv = document.createElement('div');
+        emptyDiv.textContent = 'Brak dodanych pojazdów.';
+        emptyDiv.style.color = 'var(--muted)';
+        selectedList.appendChild(emptyDiv);
+      }
+      selectedVehicles.forEach(v=>{
+        const p = PRESETS[v.presetKey];
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'selected-item';
+
+        const infoDiv = document.createElement('div');
+        const labelDiv = document.createElement('div');
+        labelDiv.style.fontWeight = '800';
+        labelDiv.textContent = p.label;
+        const detailsDiv = document.createElement('div');
+        detailsDiv.style.fontSize = '13px';
+        detailsDiv.style.color = 'var(--muted)';
+        detailsDiv.textContent = `Dł: ${p.length}m — MO: ${p.mo[v.loadState]} t — Mhr: ${brakingMass(v)} t`;
+        infoDiv.append(labelDiv, detailsDiv);
+
+        const controlsDiv = document.createElement('div');
+        controlsDiv.style.display = 'flex';
+        controlsDiv.style.gap = '8px';
+        controlsDiv.style.flexWrap = 'wrap';
+        controlsDiv.style.justifyContent = 'flex-end';
+
+        const loadSelect = document.createElement('select');
+        loadSelect.className = 'small load';
+        loadSelect.innerHTML = `<option value="prozny">Próżny</option><option value="ladowny">Ładowny</option>`;
+        loadSelect.value = v.loadState;
+        loadSelect.ariaLabel = "Stan ładowności";
+        loadSelect.onchange = e => { 
+            v.loadState = e.target.value; 
+            renderList(); 
+            saveState(); 
+        };
+
+        const brakeSelect = document.createElement('select');
+        brakeSelect.className = 'small brake';
+        brakeSelect.innerHTML = Object.keys(p.braking).map(b => `<option value="${b}">${b}</option>`).join('');
+        brakeSelect.value = v.brakingSetting;
+        brakeSelect.ariaLabel = "Nastawa hamulca";
+        brakeSelect.onchange = e => { 
+            v.brakingSetting = e.target.value; 
+            renderList(); 
+            saveState(); 
+        };
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn remove small';
+        removeBtn.textContent = 'Usuń';
+        removeBtn.onclick = () => {
+          selectedVehicles = selectedVehicles.filter(x => x.id !== v.id);
+          renderList();
+          saveState();
+        };
+
+        controlsDiv.append(loadSelect, brakeSelect, removeBtn);
+        itemDiv.append(infoDiv, controlsDiv);
+        selectedList.appendChild(itemDiv);
+      });
+
+      const mo=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].mo[v.loadState],0);
+      const mhr=selectedVehicles.reduce((s,v)=>s+brakingMass(v),0);
+      const len=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].length,0);
+
+      sumMoEl.textContent=mo.toFixed(1);
+      sumMhrEl.textContent=mhr.toFixed(1);
+      sumLenEl.textContent=Math.ceil(len);
+      if(!userEditedMO) masaPociaguInput.value=mo.toFixed(1);
+      if(!userEditedMHR) masaRzeczywistaInput.value=mhr.toFixed(1);
+
+      if (selectedVehicles.length > 0) {
+        dlugoscSkladuRow.style.display = 'contents';
+        dlugoscSkladuField.value = Math.ceil(len) + ' m';
+      } else {
+        dlugoscSkladuRow.style.display = 'none';
+      }
+    }
+
+    masaPociaguInput.oninput=()=>{ userEditedMO=true; saveState(); };
+    masaRzeczywistaInput.oninput=()=>{ userEditedMHR=true; saveState(); };
+    percentWymaganeInput.oninput=()=>{ saveState(); };
+
+    calcBtn.onclick=()=>{
+      statusDiv.textContent="";
+      const MO=parseFloat(masaPociaguInput.value);
+      const MHR=parseFloat(masaRzeczywistaInput.value);
+      const PW=parseFloat(percentWymaganeInput.value);
+      if(isNaN(MO)||MO<=0)return statusDiv.textContent="Podaj poprawną MO.";
+      if(isNaN(MHR)||MHR<=0)return statusDiv.textContent="Podaj poprawną MHR.";
+      if(isNaN(PW)||PW<=0)return statusDiv.textContent="Podaj poprawny procent wymagany.";
+
+      const wymagane=Math.ceil((MO*PW)/100);
+      const rzeczywiste=Math.floor((MHR*100)/MO);
+
+      masaWymaganaField.value=wymagane+" t";
+      percentRzeczywisteField.value=rzeczywiste+" %";
+    };
+
+    resetBtn.onclick=()=>{
+      masaPociaguInput.value="0";
+      masaWymaganaField.value="0 t";
+      masaRzeczywistaInput.value="0";
+      percentWymaganeInput.value="";
+      percentRzeczywisteField.value="0 %";
+      statusDiv.textContent="";
+      userEditedMO=false;userEditedMHR=false;
+      localStorage.removeItem('kalkulator_ph_state');
+      renderList();
+    };
+
+    loadState();
+    if(selectedVehicles.length === 0) renderList();
+    document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Kalkulator PH.`
+  </script>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-W05T4L1HFD');
+  </script>
+
+</body>
+</html>
