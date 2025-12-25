@@ -11,7 +11,7 @@
       --orange: #e16036;
       --cyan: #009dd8;
       --gray: #c4c4c4;
-      --muted: #6c7480;
+      --muted: #545b66;
       font-family: Inter, "Helvetica Neue", Arial, sans-serif;
     }
     *{box-sizing:border-box}
@@ -43,8 +43,15 @@
     .cell.right{ justify-content:flex-start; flex-direction:column; gap:6px; }
 
     input[type="number"], input[type="text"], select {
-      width:100%; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid rgba(1,38,63,0.12); outline:none; font-weight:700;
+      width:100%; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid rgba(1,38,63,0.12); font-weight:700;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.2);
+    }
+
     input.readonly{ background:linear-gradient(180deg,#fff 0%, #f7fbff 100%); border:1px solid rgba(1,38,63,0.06); }
     .note{ font-size:12px;color:var(--muted);margin-top:4px; }
 
@@ -58,6 +65,11 @@
     .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; }
     .vehicle-card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.08) }
     .vehicle-card.active{ background:var(--orange); color:white; box-shadow:0 8px 22px rgba(225,96,54,0.15) }
+    .vehicle-card:focus, .btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(225, 96, 54, 0.4);
+    }
+
 
     .selected-list{ margin-top:8px; display:flex; flex-direction:column; gap:8px; min-height:60px }
     .selected-item{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; border:1px dashed rgba(1,38,63,0.06); background:#fff; flex-wrap:wrap; }
@@ -92,57 +104,55 @@
 <body>
   <header><h1>Kalkulator karty próby hamulca</h1></header>
 
-
-  
   <main class="container">
     <section class="card calculator-panel">
       <h2 style="margin:0 0 12px 0; font-size:16px;">Kalkulator</h2>
 
       <div class="grid-table">
         <div class="grid-row">
-          <div class="cell left">Masa ogólna pociągu (MO) (t)</div>
+          <div class="cell left" id="lbl-mo">Masa ogólna pociągu (MO) (t)</div>
           <div class="cell right">
-            <input id="masa-pociagu" type="number" min="0" step="0.1" value="0">
+            <input id="masa-pociagu" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mo">
             <div class="note">Wprowadź ręcznie lub użyj predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left">Masa hamująca wymagana (MHW) (t)</div>
+          <div class="cell left" id="lbl-mhw">Masa hamująca wymagana (MHW) (t)</div>
           <div class="cell right">
-            <input id="masa-wymagana" class="readonly" type="text" readonly value="0 t">
+            <input id="masa-wymagana" class="readonly" type="text" readonly value="0 t" aria-labelledby="lbl-mhw">
             <div class="note">Obliczana jako: (MO × PW) / 100 zaokrąglana w górę.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left">Masa hamująca rzeczywista (MHR) (t)</div>
+          <div class="cell left" id="lbl-mhr">Masa hamująca rzeczywista (MHR) (t)</div>
           <div class="cell right">
-            <input id="masa-rzeczywista" type="number" min="0" step="0.1" value="0">
+            <input id="masa-rzeczywista" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mhr">
             <div class="note">Wpisz ręcznie lub uzupełnij z predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left">Procent masy hamującej wymaganej (PW) (%)</div>
+          <div class="cell left" id="lbl-pw">Procent masy hamującej wymaganej (PW) (%)</div>
           <div class="cell right">
-            <input id="percent-wymagane" type="number" min="0" max="100" step="0.1" placeholder="">
+            <input id="percent-wymagane" type="number" min="0" max="100" step="0.1" placeholder="" aria-labelledby="lbl-pw">
             <div class="note">Wpisz najwyższą wartość z WRJ.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left">Procent masy hamującej rzeczywistej (PR) (%)</div>
+          <div class="cell left" id="lbl-pr">Procent masy hamującej rzeczywistej (PR) (%)</div>
           <div class="cell right">
-            <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0 %">
-	<div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
+            <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0 %" aria-labelledby="lbl-pr">
+	        <div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
           </div>
         </div>
 
         <div class="grid-row" id="dlugosc-skladu-row" style="display: none;">
-          <div class="cell left">Długość składu (m)</div>
+          <div class="cell left" id="lbl-len">Długość składu (m)</div>
           <div class="cell right">
-            <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0 m">
+            <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0 m" aria-labelledby="lbl-len">
             <div class="note">Suma długości predefiniowanych pojazdów.</div>
           </div>
         </div>
@@ -153,10 +163,10 @@
         <button id="resetBtn" class="btn remove" style="flex:1; padding:14px 22px; font-size:16px;">Resetuj</button>
       </div>
 
-      <div id="status" class="errors"></div>
+      <div id="status" class="errors" role="alert"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez Piotra M 🚂 przy pomocy <strong>NAVI 🚀</strong>.
+        <span id="copyright"></span> Stworzone przez Piotra M 🚂 przy pomocy <strong>NAVI 🚀</strong> | Wersja aplikacji: v3.1
       </footer>
     </section>
 
@@ -170,7 +180,7 @@
           <button id="clearAll" class="btn remove" style="flex:1;">Wyczyść</button>
         </div>
 
-        <div class="selected-list" id="selectedList" style="margin-top:12px"></div>
+        <div class="selected-list" id="selectedList" style="margin-top:12px" aria-live="polite"></div>
       </div>
 
       <div class="panel">
@@ -214,7 +224,8 @@
           label: "ED160 STARY",
           length: 152.9,
           mo: { prozny: 252, ladowny: 281 },
-          braking: { "R+E+Mg": { prozny: 466, ladowny: 520 }, "R+Mg": { prozny: 458, ladowny: 511 }, "R": { prozny: 426, ladowny: 475 } }
+          /* Zmiana w v3.1: R+Mg przesunięte na pierwsze miejsce jako domyślne */
+          braking: { "R+Mg": { prozny: 458, ladowny: 511 }, "R+E+Mg": { prozny: 466, ladowny: 520 }, "R": { prozny: 426, ladowny: 475 } }
         },
         "ED160-nowy": {
           label: "ED160 NOWY",
@@ -273,6 +284,42 @@
     let userEditedMO = false;
     let userEditedMHR = false;
 
+    function saveState() {
+        const state = {
+            selectedVehicles: selectedVehicles,
+            mo: masaPociaguInput.value,
+            mhr: masaRzeczywistaInput.value,
+            pw: percentWymaganeInput.value,
+            userEditedMO: userEditedMO,
+            userEditedMHR: userEditedMHR
+        };
+        localStorage.setItem('kalkulator_ph_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const saved = localStorage.getItem('kalkulator_ph_state');
+        if (saved) {
+            try {
+                const state = JSON.parse(saved);
+                selectedVehicles = state.selectedVehicles || [];
+                userEditedMO = state.userEditedMO || false;
+                userEditedMHR = state.userEditedMHR || false;
+                
+                if (state.mo) masaPociaguInput.value = state.mo;
+                if (state.mhr) masaRzeczywistaInput.value = state.mhr;
+                if (state.pw) percentWymaganeInput.value = state.pw;
+
+                renderList();
+                if(state.pw && state.mo && state.mhr) {
+                    calcBtn.click();
+                }
+            } catch (e) {
+                console.error("Błąd odczytu stanu aplikacji", e);
+                localStorage.removeItem('kalkulator_ph_state');
+            }
+        }
+    }
+
     Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
       const groupHeader = document.createElement('div');
       groupHeader.className = 'group-header';
@@ -303,15 +350,18 @@
     clearAllBtn.onclick = ()=>{
       selectedVehicles = [];
       renderList();
+      saveState();
     };
 
     function addVehicle(key){
       const preset = PRESETS[key];
       const id = Date.now();
       selectedVehicles.push({
+        /* Wybiera pierwszy klucz z obiektu braking jako domyślny */
         id, presetKey:key, loadState:'ladowny', brakingSetting:Object.keys(preset.braking)[0]
       });
       renderList();
+      saveState();
     }
 
     function brakingMass(v){
@@ -353,13 +403,23 @@
         loadSelect.className = 'small load';
         loadSelect.innerHTML = `<option value="prozny">Próżny</option><option value="ladowny">Ładowny</option>`;
         loadSelect.value = v.loadState;
-        loadSelect.onchange = e => { v.loadState = e.target.value; renderList(); };
+        loadSelect.ariaLabel = "Stan ładowności";
+        loadSelect.onchange = e => { 
+            v.loadState = e.target.value; 
+            renderList(); 
+            saveState(); 
+        };
 
         const brakeSelect = document.createElement('select');
         brakeSelect.className = 'small brake';
         brakeSelect.innerHTML = Object.keys(p.braking).map(b => `<option value="${b}">${b}</option>`).join('');
         brakeSelect.value = v.brakingSetting;
-        brakeSelect.onchange = e => { v.brakingSetting = e.target.value; renderList(); };
+        brakeSelect.ariaLabel = "Nastawa hamulca";
+        brakeSelect.onchange = e => { 
+            v.brakingSetting = e.target.value; 
+            renderList(); 
+            saveState(); 
+        };
 
         const removeBtn = document.createElement('button');
         removeBtn.className = 'btn remove small';
@@ -367,6 +427,7 @@
         removeBtn.onclick = () => {
           selectedVehicles = selectedVehicles.filter(x => x.id !== v.id);
           renderList();
+          saveState();
         };
 
         controlsDiv.append(loadSelect, brakeSelect, removeBtn);
@@ -392,8 +453,9 @@
       }
     }
 
-    masaPociaguInput.oninput=()=>userEditedMO=true;
-    masaRzeczywistaInput.oninput=()=>userEditedMHR=true;
+    masaPociaguInput.oninput=()=>{ userEditedMO=true; saveState(); };
+    masaRzeczywistaInput.oninput=()=>{ userEditedMHR=true; saveState(); };
+    percentWymaganeInput.oninput=()=>{ saveState(); };
 
     calcBtn.onclick=()=>{
       statusDiv.textContent="";
@@ -419,14 +481,15 @@
       percentRzeczywisteField.value="0 %";
       statusDiv.textContent="";
       userEditedMO=false;userEditedMHR=false;
+      localStorage.removeItem('kalkulator_ph_state');
       renderList();
     };
 
-    renderList();
+    loadState();
+    if(selectedVehicles.length === 0) renderList();
     document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Kalkulator PH.`
   </script>
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-W05T4L1HFD"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
