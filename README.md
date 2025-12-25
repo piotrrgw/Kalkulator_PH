@@ -1,45 +1,58 @@
-# Kalkulator Próby Hamulca (Brake Test Calculator)
+# Kalkulator Karty Próby Hamulca (Wersja v3.1)
 
-Nowoczesna aplikacja webowa do obliczania wymaganej i rzeczywistej masy hamującej pociągu. Narzędzie wspiera personel kolejowy w szybkim i bezbłędnym przygotowaniu karty próby hamulca, zgodnie z przepisami obowiązującymi w Polsce (m.in. instrukcja hamulcowa PKP PLK Ir-1).
+Profesjonalne narzędzie dla maszynistów i rewidentów taboru kolejowego, służące do szybkiego i precyzyjnego obliczania parametrów hamulcowych pociągu (MHW, Rzeczywisty % masy hamującej) oraz generowania danych do Karty Próby Hamulca.
 
-> [!NOTE]
-> **[Sprawdź aplikację w działaniu](https://piotrrgw.github.io/Kalkulator_PH/)**
+Aplikacja jest w pełni responsywna (RWD), zgodna ze standardami dostępności (WCAG/EAA) i działa offline.
 
-Podgląd strony w widoku DESKTOP.
-![alt text](image.png)
+### 🌐 [Uruchom aplikację online](https://piotrrgw.github.io/Kalkulator_PH/index.html)
 
-## 🚀 Główne funkcje
+## 🚀 Funkcjonalności
 
-*   **Zgodność z przepisami:** Algorytm obliczeniowy oparty na krajowych instrukcjach kolejowych, co minimalizuje ryzyko błędu ludzkiego.
-*   **Dwa tryby pracy:**
-    *   **Tryb manualny:** Ręczne wprowadzanie parametrów dla dowolnego składu pociągu.
-    *   **Szablony EZT:** Baza predefiniowanych Elektrycznych Zespołów Trakcyjnych, która automatycznie uzupełnia dane techniczne pojazdu, przyspieszając pracę.
-*   **Walidacja w czasie rzeczywistym:** Aplikacja na bieżąco oblicza procent masy hamującej i informuje, czy skład spełnia wymogi.
-*   **Responsywność:** Interfejs dostosowany do urządzeń mobilnych (smartfony, tablety), co ułatwia pracę w terenie.
+* **Automatyczne obliczenia:**
+    * Masy Hamującej Wymaganej (MHW) – zaokrąglanie w górę (bezpieczna strona).
+    * Rzeczywistego % masy hamującej – zaokrąglanie w dół.
+    * Długości składu.
+* **Baza pojazdów (Presety):**
+    * Szybki wybór składów zespolonych (PESA, STADLER, ALSTOM, SKPL).
+    * Możliwość konfiguracji ładowności (Próżny/Ładowny) oraz nastawy hamulca (R, R+Mg, R+E+Mg).
+    * Automatyczne sumowanie mas i długości wybranych pojazdów.
+* **Zapisywanie stanu (Nowość w v3.0/v3.1):**
+    * Aplikacja automatycznie zapamiętuje wprowadzone dane i wybrane pojazdy w pamięci przeglądarki (Local Storage). Po odświeżeniu strony lub powrocie do aplikacji, formularz jest wypełniony.
+* **Dostępność (Accessibility):**
+    * Pełna obsługa czytników ekranowych (ARIA labels).
+    * Wysoki kontrast i wyraźna sygnalizacja fokusu (Focus Ring).
+    * Przystosowanie do obsługi klawiaturą.
 
-## 🛠️ Jak używać?
+## 🛠 Technologie
 
-1.  Otwórz aplikację w przeglądarce internetowej.
-2.  Wybierz tryb pracy: **Manualny** lub **Szablony EZT**.
-3.  Wprowadź dane pociągu (masa, długość, masa hamująca poszczególnych pojazdów).
-4.  Podaj prędkość rozkładową i rodzaj pociągu (pasażerski/towarowy).
-5.  System automatycznie obliczy wymaganą i rzeczywistą masę hamującą oraz wskaże, czy warunki zostały spełnione.
+* **HTML5 / CSS3:** Nowoczesny, responsywny layout (Mobile First).
+* **JavaScript (ES6+):** Logika obliczeń i obsługa Local Storage.
+* **Google Analytics 4:** Monitorowanie ruchu.
 
-## 💻 Stos technologiczny
+## 📋 Jak używać
 
-*   **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-*   **Podejście:** Vanilla JS (brak zewnętrznych bibliotek i frameworków), co gwarantuje maksymalną wydajność i szybkość ładowania.
+1.  **Wybór pojazdów:** Kliknij na typ pojazdu z panelu bocznego "Predefiniowane składy", aby dodać go do listy.
+2.  **Konfiguracja:** Dla każdego dodanego pojazdu ustaw stan ładowności oraz nastawę hamulca.
+3.  **Dane ręczne:** Możesz ręcznie skorygować Masę Ogólną (MO) lub Masę Hamującą Rzeczywistą (MHR) w polach formularza.
+4.  **Wymagany procent:** Wpisz wartość procentową masy hamującej wymaganej (PW) z rozkładu jazdy.
+5.  **Wynik:** Kliknij "Oblicz", aby otrzymać gotowe dane do wpisania w Kartę Próby.
 
-## 🤝 Wkład w projekt (Contributing)
+## 🔄 Historia zmian
 
-Masz pomysł na ulepszenie aplikacji lub znalazłeś błąd? Zapraszam do tworzenia zgłoszeń (Issues) lub Pull Requestów. Każda pomoc jest mile widziana!
+### v3.1 (Obecna)
+* Ustawienie domyślnej nastawy hamulca dla **ED160 STARY** na `R+Mg`.
+* Drobne poprawki optymalizacyjne.
 
-## 💡 Informacje o dewelopmencie
+### v3.0
+* **Nowy Layout:** Całkowite odświeżenie interfejsu użytkownika.
+* **Local Storage:** Dodano zapamiętywanie stanu aplikacji.
+* **WCAG & EAA:** Pełne dostosowanie do wytycznych dostępności (poprawa kontrastu, focus ring, etykiety ARIA).
+* Dodano stopkę z wersjonowaniem.
 
-Projekt został stworzony w modelu **AI-Assisted Development**. Kluczowe elementy logiki biznesowej, struktury danych oraz interfejsu użytkownika zostały zaimplementowane przy wsparciu zaawansowanych modeli językowych.
+## 🚂 Autorzy
+
+* **Główny twórca:** Piotr M 🚂
+* **Wsparcie AI:** ChatGPT 🚀
 
 ---
-
-> [!WARNING]
-> **Nota prawna (Disclaimer)**
-> Aplikacja ma charakter **pomocniczy i edukacyjny**. Mimo dołożenia wszelkich starań w celu zapewnienia zgodności z obowiązującymi przepisami, nie może ona zastąpić oficjalnej dokumentacji ani wiedzy uprawnionego pracownika. Ostateczna odpowiedzialność za prawidłowe przygotowanie pociągu i wypełnienie dokumentacji spoczywa na osobie wykonującej te czynności. Zawsze weryfikuj wyniki z oficjalnymi tabelami i instrukcjami.
+*Aplikacja tworzona hobbystycznie, wspomagająca pracę na kolei. Zawsze weryfikuj wyniki z obowiązującymi przepisami.*
