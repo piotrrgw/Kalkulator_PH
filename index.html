@@ -13,6 +13,7 @@
       --cyan: #009dd8;
       --gray: #c4c4c4;
       --muted: #545b66;
+      --danger: #d32f2f;
       font-family: Inter, "Helvetica Neue", Arial, sans-serif;
     }
     *{box-sizing:border-box}
@@ -59,6 +60,26 @@
     input.readonly{ background:linear-gradient(180deg,#fff 0%, #f7fbff 100%); border:1px solid rgba(1,38,63,0.06); }
     .note{ font-size:12px;color:var(--muted);margin-top:4px; }
 
+    @keyframes pulse-warning {
+      0% { opacity: 1; border-color: rgba(211, 47, 47, 1); box-shadow: 0 0 0 rgba(211, 47, 47, 0.4); }
+      50% { opacity: 0.7; border-color: rgba(211, 47, 47, 0.4); box-shadow: 0 0 10px rgba(211, 47, 47, 0.2); }
+      100% { opacity: 1; border-color: rgba(211, 47, 47, 1); box-shadow: 0 0 0 rgba(211, 47, 47, 0.4); }
+    }
+    
+    .warning-msg {
+      display: none;
+      color: var(--danger);
+      font-weight: 800;
+      font-size: 13px;
+      margin-top: 8px;
+      padding: 10px;
+      border: 2px dashed var(--danger);
+      border-radius: 8px;
+      background: #fffafa;
+      animation: pulse-warning 2s infinite ease-in-out;
+      text-align: center;
+    }
+
     .presets{ display:flex; flex-direction:column; gap:14px; }
     .panel{ border-radius:10px; padding:12px; background:linear-gradient(180deg,#ffffff,#fbfdff); border:1px solid rgba(1,38,63,0.05); box-shadow:0 6px 18px rgba(2,12,34,0.04); }
     .panel-header{ text-align:center; }
@@ -86,7 +107,7 @@
     .btn.add{ background:var(--cyan); color:white }
     .btn.remove{ background:var(--orange); color:white }
 
-    .errors{ margin-top:10px; color:#b00020; font-weight:700 }
+    .errors{ margin-top:10px; color:var(--danger); font-weight:700 }
     .result{ font-size:18px; font-weight:800; color:var(--dark-navy); }
 
     footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:center; }
@@ -130,7 +151,7 @@
 
         <div class="grid-row">
           <div class="cell left" id="lbl-mhw">Masa hamująca wymagana (MHW)</div>
-          <div class="cell right">
+          <div class="cell right" aria-live="polite">
             <div class="input-wrapper">
               <input id="masa-wymagana" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-mhw">
               <span class="unit" aria-hidden="true">t</span>
@@ -163,12 +184,16 @@
 
         <div class="grid-row">
           <div class="cell left" id="lbl-pr">Procent masy hamującej rzeczywistej (PR)</div>
-          <div class="cell right">
+          <div class="cell right" aria-live="polite">
             <div class="input-wrapper">
               <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-pr">
               <span class="unit" aria-hidden="true">%</span>
             </div>
 	        <div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
+            
+            <div id="pr-warning" class="warning-msg" role="alert">
+              Procent rzeczywisty jest mniejszy od procentu wymaganego. Postępuj zgodnie z przepisami.
+            </div>
           </div>
         </div>
 
@@ -188,10 +213,10 @@
         <button id="resetBtn" class="btn remove" style="flex:1; padding:14px 22px; font-size:16px;">Resetuj formularz</button>
       </div>
 
-      <div id="status" class="errors" role="alert"></div>
+      <div id="status" class="errors" role="alert" aria-live="assertive"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.3
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.4
       </footer>
     </section>
 
@@ -303,50 +328,28 @@
     const percentRzeczywisteField = document.getElementById('percent-rzeczywiste');
     const resetBtn = document.getElementById('resetBtn');
     const statusDiv = document.getElementById('status');
+    const warningMsg = document.getElementById('pr-warning');
 
     let selectedVehicles = [];
     let userEditedMO = false;
     let userEditedMHR = false;
 
-    function saveState() {
-        const state = {
-            selectedVehicles: selectedVehicles,
-            mo: masaPociaguInput.value,
-            mhr: masaRzeczywistaInput.value,
-            pw: percentWymaganeInput.value,
-            userEditedMO: userEditedMO,
-            userEditedMHR: userEditedMHR
-        };
-        localStorage.setItem('kalkulator_ph_state', JSON.stringify(state));
-    }
-
-    function loadState() {
-        const saved = localStorage.getItem('kalkulator_ph_state');
-        if (saved) {
-            try {
-                const state = JSON.parse(saved);
-                selectedVehicles = state.selectedVehicles || [];
-                userEditedMO = state.userEditedMO || false;
-                userEditedMHR = state.userEditedMHR || false;
-                
-                if (state.mo) masaPociaguInput.value = state.mo;
-                if (state.mhr) masaRzeczywistaInput.value = state.mhr;
-                if (state.pw) percentWymaganeInput.value = state.pw;
-
-                renderList();
-            } catch (e) {
-                console.error("Błąd odczytu stanu aplikacji", e);
-                localStorage.removeItem('kalkulator_ph_state');
-            }
-        }
-    }
-
     // Dynamiczne obliczanie wyników
     function calculateResults() {
         statusDiv.textContent = "";
-        const MO = parseFloat(masaPociaguInput.value);
-        const MHR = parseFloat(masaRzeczywistaInput.value);
-        const PW = parseFloat(percentWymaganeInput.value);
+        warningMsg.style.display = "none";
+
+        let MO = parseFloat(masaPociaguInput.value);
+        let MHR = parseFloat(masaRzeczywistaInput.value);
+        let PW = parseFloat(percentWymaganeInput.value);
+
+        // Sanity checks dla "kuloodporności"
+        if (MO > 20000 || MHR > 20000 || PW > 300) {
+            statusDiv.textContent = "Wprowadzono nierealistyczne wartości.";
+            masaWymaganaField.value = "0";
+            percentRzeczywisteField.value = "0";
+            return;
+        }
 
         if (isNaN(MO) || MO <= 0 || isNaN(MHR) || MHR <= 0 || isNaN(PW) || PW <= 0) {
             masaWymaganaField.value = "0";
@@ -359,6 +362,11 @@
 
         masaWymaganaField.value = wymagane;
         percentRzeczywisteField.value = rzeczywiste;
+
+        // Kontrola bezpieczeństwa z wymuszonym wyświetleniem alertu
+        if (rzeczywiste < PW || MHR < wymagane) {
+            warningMsg.style.display = "block";
+        }
     }
 
     Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
@@ -395,7 +403,6 @@
         id, presetKey:key, loadState:'ladowny', brakingSetting:Object.keys(preset.braking)[0]
       });
       renderList();
-      saveState();
     }
 
     function brakingMass(v){
@@ -442,7 +449,6 @@
         loadSelect.onchange = e => { 
             v.loadState = e.target.value; 
             renderList(); 
-            saveState(); 
         };
 
         const brakeSelect = document.createElement('select');
@@ -453,7 +459,6 @@
         brakeSelect.onchange = e => { 
             v.brakingSetting = e.target.value; 
             renderList(); 
-            saveState(); 
         };
 
         const removeBtn = document.createElement('button');
@@ -462,7 +467,6 @@
         removeBtn.onclick = () => {
           selectedVehicles = selectedVehicles.filter(x => x.id !== v.id);
           renderList();
-          saveState();
         };
 
         controlsDiv.append(loadSelect, brakeSelect, removeBtn);
@@ -490,10 +494,28 @@
       calculateResults(); // przelicz automatycznie
     }
 
-    // Auto-przeliczanie przy ręcznych zmianach
-    masaPociaguInput.oninput = () => { userEditedMO = true; calculateResults(); saveState(); };
-    masaRzeczywistaInput.oninput = () => { userEditedMHR = true; calculateResults(); saveState(); };
-    percentWymaganeInput.oninput = () => { calculateResults(); saveState(); };
+    // Auto-przeliczanie przy ręcznych zmianach z odblokowaniem przy kasowaniu
+    masaPociaguInput.oninput = (e) => { 
+        if(e.target.value === "" || parseFloat(e.target.value) === 0) {
+            userEditedMO = false; 
+            renderList(); 
+        } else {
+            userEditedMO = true; 
+        }
+        calculateResults(); 
+    };
+
+    masaRzeczywistaInput.oninput = (e) => { 
+        if(e.target.value === "" || parseFloat(e.target.value) === 0) {
+            userEditedMHR = false; 
+            renderList(); 
+        } else {
+            userEditedMHR = true; 
+        }
+        calculateResults(); 
+    };
+
+    percentWymaganeInput.oninput = () => { calculateResults(); };
 
     // Zintegrowana funkcja resetująca
     function resetAllData() {
@@ -504,17 +526,16 @@
       percentWymaganeInput.value = "";
       percentRzeczywisteField.value = "0";
       statusDiv.textContent = "";
+      warningMsg.style.display = "none";
       userEditedMO = false;
       userEditedMHR = false;
-      localStorage.removeItem('kalkulator_ph_state');
       renderList();
     }
 
     resetBtn.onclick = resetAllData;
     clearAllBtn.onclick = resetAllData;
 
-    loadState();
-    if(selectedVehicles.length === 0) renderList();
+    renderList();
     document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Kalkulator PH.`
   </script>
 
