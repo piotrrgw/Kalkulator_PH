@@ -66,7 +66,7 @@
     .group-header{ width:100%; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:12px 0 4px 0; letter-spacing:0.5px; }
 
     .vehicle-list{ display:flex; gap:8px; flex-wrap:wrap; }
-    .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; }
+    .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; line-height:1.2; text-align:center; }
     .vehicle-card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.08) }
     .vehicle-card.active{ background:var(--orange); color:white; box-shadow:0 8px 22px rgba(225,96,54,0.15) }
     .vehicle-card:focus, .btn:focus {
@@ -75,8 +75,12 @@
     }
 
     .selected-list{ margin-top:8px; display:flex; flex-direction:column; gap:8px; min-height:60px }
-    .selected-item{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; border:1px dashed rgba(1,38,63,0.06); background:#fff; flex-wrap:wrap; }
-    .small{ padding:6px 8px; border-radius:6px; border:1px solid rgba(1,38,63,0.06); background:transparent; font-size:14px; }
+    .selected-item{ display:flex; gap:12px; align-items:center; justify-content:space-between; padding:10px; border-radius:8px; border:1px dashed rgba(1,38,63,0.15); background:#fff; flex-wrap:wrap; }
+    
+    .selected-item-info { flex: 1 1 150px; word-wrap: break-word; }
+    .selected-item-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+    
+    select.small, button.small { width: auto !important; flex: none !important; padding:6px 8px; border-radius:6px; border:1px solid rgba(1,38,63,0.15); background:transparent; font-size:14px; }
 
     .btn{ display:inline-block; padding:12px 18px; border-radius:10px; cursor:pointer; border:0; font-weight:800; }
     .btn.add{ background:var(--cyan); color:white }
@@ -100,7 +104,8 @@
       .cell.left{ text-align:left; justify-content:flex-start; padding-left:16px }
       .vehicle-card{ width:100%; text-align:center; }
       .selected-item{ flex-direction:column; align-items:stretch; }
-      .selected-item select, .selected-item button{ width:100%; }
+      .selected-item-controls { justify-content: stretch; }
+      select.small, button.small{ width:100% !important; }
     }
   </style>
 </head>
@@ -186,7 +191,7 @@
       <div id="status" class="errors" role="alert"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.2
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.3
       </footer>
     </section>
 
@@ -413,20 +418,21 @@
         itemDiv.className = 'selected-item';
 
         const infoDiv = document.createElement('div');
+        infoDiv.className = 'selected-item-info';
+        
         const labelDiv = document.createElement('div');
         labelDiv.style.fontWeight = '800';
         labelDiv.textContent = p.label;
+        
         const detailsDiv = document.createElement('div');
         detailsDiv.style.fontSize = '13px';
         detailsDiv.style.color = 'var(--muted)';
         detailsDiv.textContent = `Dł: ${p.length}m — MO: ${p.mo[v.loadState]} t — Mhr: ${brakingMass(v)} t`;
+        
         infoDiv.append(labelDiv, detailsDiv);
 
         const controlsDiv = document.createElement('div');
-        controlsDiv.style.display = 'flex';
-        controlsDiv.style.gap = '8px';
-        controlsDiv.style.flexWrap = 'wrap';
-        controlsDiv.style.justifyContent = 'flex-end';
+        controlsDiv.className = 'selected-item-controls';
 
         const loadSelect = document.createElement('select');
         loadSelect.className = 'small load';
