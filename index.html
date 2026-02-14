@@ -41,11 +41,14 @@
     .grid-row{ display:contents; }
     .cell{ padding:18px; border-bottom:2px solid rgba(1,38,63,0.07); border-right:2px solid rgba(1,38,63,0.07); min-height:56px; display:flex; align-items:center; }
     .cell.left{ background: linear-gradient(180deg, rgba(1,38,63,0.02), rgba(1,38,63,0.00)); font-weight:700; text-transform:uppercase; font-size:15px; justify-content:center; text-align:center; letter-spacing:0.4px; }
-    .cell.right{ justify-content:flex-start; flex-direction:column; gap:6px; }
+    .cell.right{ justify-content:flex-start; flex-direction:column; gap:6px; align-items: stretch; }
+
+    .input-wrapper { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .unit { font-weight: 700; color: var(--dark-navy); font-size: 16px; min-width: 20px; text-align: right; }
 
     input[type="number"], input[type="text"], select {
-      width:100%; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid rgba(1,38,63,0.12); font-weight:700;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      flex: 1; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid rgba(1,38,63,0.12); font-weight:700;
+      transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
     }
     input:focus, select:focus {
       outline: none;
@@ -70,7 +73,6 @@
         outline: none;
         box-shadow: 0 0 0 3px rgba(225, 96, 54, 0.4);
     }
-
 
     .selected-list{ margin-top:8px; display:flex; flex-direction:column; gap:8px; min-height:60px }
     .selected-item{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; border:1px dashed rgba(1,38,63,0.06); background:#fff; flex-wrap:wrap; }
@@ -111,63 +113,80 @@
 
       <div class="grid-table">
         <div class="grid-row">
-          <div class="cell left" id="lbl-mo">Masa ogólna pociągu (MO) (t)</div>
+          <div class="cell left" id="lbl-mo">Masa ogólna pociągu (MO)</div>
           <div class="cell right">
-            <input id="masa-pociagu" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mo">
+            <div class="input-wrapper">
+              <input id="masa-pociagu" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mo">
+              <span class="unit" aria-hidden="true">t</span>
+            </div>
             <div class="note">Wprowadź ręcznie lub użyj predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left" id="lbl-mhw">Masa hamująca wymagana (MHW) (t)</div>
+          <div class="cell left" id="lbl-mhw">Masa hamująca wymagana (MHW)</div>
           <div class="cell right">
-            <input id="masa-wymagana" class="readonly" type="text" readonly value="0 t" aria-labelledby="lbl-mhw">
+            <div class="input-wrapper">
+              <input id="masa-wymagana" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-mhw">
+              <span class="unit" aria-hidden="true">t</span>
+            </div>
             <div class="note">Obliczana jako: (MO × PW) / 100 zaokrąglana w górę.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left" id="lbl-mhr">Masa hamująca rzeczywista (MHR) (t)</div>
+          <div class="cell left" id="lbl-mhr">Masa hamująca rzeczywista (MHR)</div>
           <div class="cell right">
-            <input id="masa-rzeczywista" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mhr">
+            <div class="input-wrapper">
+              <input id="masa-rzeczywista" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mhr">
+              <span class="unit" aria-hidden="true">t</span>
+            </div>
             <div class="note">Wpisz ręcznie lub uzupełnij z predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left" id="lbl-pw">Procent masy hamującej wymaganej (PW) (%)</div>
+          <div class="cell left" id="lbl-pw">Procent masy hamującej wymaganej (PW)</div>
           <div class="cell right">
-            <input id="percent-wymagane" type="number" min="0" max="100" step="0.1" placeholder="" aria-labelledby="lbl-pw">
+            <div class="input-wrapper">
+              <input id="percent-wymagane" type="number" min="0" max="100" step="0.1" placeholder="" aria-labelledby="lbl-pw">
+              <span class="unit" aria-hidden="true">%</span>
+            </div>
             <div class="note">Wpisz najwyższą wartość z WRJ.</div>
           </div>
         </div>
 
         <div class="grid-row">
-          <div class="cell left" id="lbl-pr">Procent masy hamującej rzeczywistej (PR) (%)</div>
+          <div class="cell left" id="lbl-pr">Procent masy hamującej rzeczywistej (PR)</div>
           <div class="cell right">
-            <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0 %" aria-labelledby="lbl-pr">
+            <div class="input-wrapper">
+              <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-pr">
+              <span class="unit" aria-hidden="true">%</span>
+            </div>
 	        <div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
           </div>
         </div>
 
         <div class="grid-row" id="dlugosc-skladu-row" style="display: none;">
-          <div class="cell left" id="lbl-len">Długość składu (m)</div>
+          <div class="cell left" id="lbl-len">Długość składu</div>
           <div class="cell right">
-            <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0 m" aria-labelledby="lbl-len">
+            <div class="input-wrapper">
+              <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-len">
+              <span class="unit" aria-hidden="true">m</span>
+            </div>
             <div class="note">Suma długości predefiniowanych pojazdów.</div>
           </div>
         </div>
       </div>
 
       <div style="display:flex; gap:12px; margin-top:14px;">
-        <button id="calcBtn" class="btn add" style="flex:1; padding:14px 22px; font-size:16px;">Oblicz</button>
-        <button id="resetBtn" class="btn remove" style="flex:1; padding:14px 22px; font-size:16px;">Resetuj</button>
+        <button id="resetBtn" class="btn remove" style="flex:1; padding:14px 22px; font-size:16px;">Resetuj formularz</button>
       </div>
 
       <div id="status" class="errors" role="alert"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez Piotra M 🚂 przy pomocy <strong>NAVI 🚀</strong> | Wersja aplikacji: v3.1
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.2
       </footer>
     </section>
 
@@ -225,9 +244,7 @@
           label: "ED160 STARY",
           length: 152.9,
           mo: { prozny: 252, ladowny: 281 },
-          /* Zmiana w v3.1: R+Mg przesunięte na pierwsze miejsce jako domyślne */
           braking: { "R+Mg": { prozny: 458, ladowny: 511 },
-           //"R+E+Mg": { prozny: 466, ladowny: 520 }, 
            "R": { prozny: 426, ladowny: 475 } }
         },
         "ED160-nowy": {
@@ -279,7 +296,6 @@
     const masaRzeczywistaInput = document.getElementById('masa-rzeczywista');
     const percentWymaganeInput = document.getElementById('percent-wymagane');
     const percentRzeczywisteField = document.getElementById('percent-rzeczywiste');
-    const calcBtn = document.getElementById('calcBtn');
     const resetBtn = document.getElementById('resetBtn');
     const statusDiv = document.getElementById('status');
 
@@ -313,14 +329,31 @@
                 if (state.pw) percentWymaganeInput.value = state.pw;
 
                 renderList();
-                if(state.pw && state.mo && state.mhr) {
-                    calcBtn.click();
-                }
             } catch (e) {
                 console.error("Błąd odczytu stanu aplikacji", e);
                 localStorage.removeItem('kalkulator_ph_state');
             }
         }
+    }
+
+    // Dynamiczne obliczanie wyników
+    function calculateResults() {
+        statusDiv.textContent = "";
+        const MO = parseFloat(masaPociaguInput.value);
+        const MHR = parseFloat(masaRzeczywistaInput.value);
+        const PW = parseFloat(percentWymaganeInput.value);
+
+        if (isNaN(MO) || MO <= 0 || isNaN(MHR) || MHR <= 0 || isNaN(PW) || PW <= 0) {
+            masaWymaganaField.value = "0";
+            percentRzeczywisteField.value = "0";
+            return;
+        }
+
+        const wymagane = Math.ceil((MO * PW) / 100);
+        const rzeczywiste = Math.floor((MHR * 100) / MO);
+
+        masaWymaganaField.value = wymagane;
+        percentRzeczywisteField.value = rzeczywiste;
     }
 
     Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
@@ -350,17 +383,10 @@
       active.classList.remove('active');
     };
 
-    clearAllBtn.onclick = ()=>{
-      selectedVehicles = [];
-      renderList();
-      saveState();
-    };
-
     function addVehicle(key){
       const preset = PRESETS[key];
       const id = Date.now();
       selectedVehicles.push({
-        /* Wybiera pierwszy klucz z obiektu braking jako domyślny */
         id, presetKey:key, loadState:'ladowny', brakingSetting:Object.keys(preset.braking)[0]
       });
       renderList();
@@ -450,43 +476,36 @@
 
       if (selectedVehicles.length > 0) {
         dlugoscSkladuRow.style.display = 'contents';
-        dlugoscSkladuField.value = Math.ceil(len) + ' m';
+        dlugoscSkladuField.value = Math.ceil(len);
       } else {
         dlugoscSkladuRow.style.display = 'none';
       }
+
+      calculateResults(); // przelicz automatycznie
     }
 
-    masaPociaguInput.oninput=()=>{ userEditedMO=true; saveState(); };
-    masaRzeczywistaInput.oninput=()=>{ userEditedMHR=true; saveState(); };
-    percentWymaganeInput.oninput=()=>{ saveState(); };
+    // Auto-przeliczanie przy ręcznych zmianach
+    masaPociaguInput.oninput = () => { userEditedMO = true; calculateResults(); saveState(); };
+    masaRzeczywistaInput.oninput = () => { userEditedMHR = true; calculateResults(); saveState(); };
+    percentWymaganeInput.oninput = () => { calculateResults(); saveState(); };
 
-    calcBtn.onclick=()=>{
-      statusDiv.textContent="";
-      const MO=parseFloat(masaPociaguInput.value);
-      const MHR=parseFloat(masaRzeczywistaInput.value);
-      const PW=parseFloat(percentWymaganeInput.value);
-      if(isNaN(MO)||MO<=0)return statusDiv.textContent="Podaj poprawną MO.";
-      if(isNaN(MHR)||MHR<=0)return statusDiv.textContent="Podaj poprawną MHR.";
-      if(isNaN(PW)||PW<=0)return statusDiv.textContent="Podaj poprawny procent wymagany.";
-
-      const wymagane=Math.ceil((MO*PW)/100);
-      const rzeczywiste=Math.floor((MHR*100)/MO);
-
-      masaWymaganaField.value=wymagane+" t";
-      percentRzeczywisteField.value=rzeczywiste+" %";
-    };
-
-    resetBtn.onclick=()=>{
-      masaPociaguInput.value="0";
-      masaWymaganaField.value="0 t";
-      masaRzeczywistaInput.value="0";
-      percentWymaganeInput.value="";
-      percentRzeczywisteField.value="0 %";
-      statusDiv.textContent="";
-      userEditedMO=false;userEditedMHR=false;
+    // Zintegrowana funkcja resetująca
+    function resetAllData() {
+      selectedVehicles = [];
+      masaPociaguInput.value = "0";
+      masaWymaganaField.value = "0";
+      masaRzeczywistaInput.value = "0";
+      percentWymaganeInput.value = "";
+      percentRzeczywisteField.value = "0";
+      statusDiv.textContent = "";
+      userEditedMO = false;
+      userEditedMHR = false;
       localStorage.removeItem('kalkulator_ph_state');
       renderList();
-    };
+    }
+
+    resetBtn.onclick = resetAllData;
+    clearAllBtn.onclick = resetAllData;
 
     loadState();
     if(selectedVehicles.length === 0) renderList();
