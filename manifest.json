@@ -1,0 +1,22 @@
+{
+  "short_name": "Kalkulator PH",
+  "name": "Kalkulator Karty Próby Hamulca",
+  "description": "Profesjonalne narzędzie do obliczeń parametrów hamulcowych pociągu.",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#01263f",
+  "background_color": "#ffffff",
+  "orientation": "portrait"
+}
