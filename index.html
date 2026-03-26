@@ -1,25 +1,15 @@
 <!doctype html>
 <html lang="pl">
 <head>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
- <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#01263f">
-
-<script>
-  // Rejestracja Service Workera
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('Service Worker zarejestrowany!'))
-        .catch(err => console.log('Błąd rejestracji SW:', err));
-    });
-  }
-</script>
-
   <title>Kalkulator karty próby hamulca</title>
+  
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#01263f">
+
   <style>
     :root{
       --dark-navy: #01263f;
@@ -230,7 +220,7 @@
       <div id="status" class="errors" role="alert" aria-live="assertive"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.4
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.5
       </footer>
     </section>
 
@@ -268,6 +258,19 @@
   </main>
 
   <script>
+    // Rejestracja Service Workera dla wsparcia PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('Service Worker zarejestrowany pomyślnie.', registration.scope);
+          })
+          .catch(error => {
+            console.error('Błąd rejestracji Service Workera:', error);
+          });
+      });
+    }
+
     const PRESET_GROUPS = {
       "PESA": {
         "ED74": {
