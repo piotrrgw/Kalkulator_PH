@@ -1,4 +1,7 @@
-const CACHE_NAME = 'kalkulator-ph-v3.4.1'; // Zmień tę nazwę przy każdej większej aktualizacji plików!
+// Numer wersji musi być zmieniany przy każdej aktualizacji plików aplikacji
+const CACHE_NAME = 'kalkulator-ph-v3.6';
+
+// Najważniejsze pliki niezbędne do działania offline
 const ASSETS = [
   './',
   './index.html',
@@ -9,34 +12,52 @@ const ASSETS = [
   './icon-512x512.png'
 ];
 
-// Instalacja i cache'owanie zasobów
+// 1. Instalacja i bezpieczne cache'owanie zasobów
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[Service Worker] Zapisywanie plików do pamięci...');
+      // Używamy mapowania z catch, aby brak jednego pliku (np. ikony) 
+      // nie zablokował zapisania całego kalkulatora do działania offline.
+      return Promise.all(
+        ASSETS.map(asset => {
+          return cache.add(asset).catch(error => {
+            console.warn('[Service Worker] Nie udało się pobrać pliku do cache:', asset, error);
+          });
+        })
+      );
+    })
   );
-  self.skipWaiting(); // Zmusza nowy SW do natychmiastowej instalacji
+  // Zmusza nowy SW do natychmiastowego przejęcia kontroli (wymusza aktualizację)
+  self.skipWaiting(); 
 });
 
-// Usuwanie starego cache (niezbędne, by użytkownicy widzieli nową wersję HTML po aktualizacji)
+// 2. Czyszczenie starego cache (niezbędne, aby użytkownicy widzieli nowe wersje)
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(keyList.map((key) => {
+        // Jeśli nazwa cache w przeglądarce nie pasuje do aktualnego CACHE_NAME, usuwamy go
         if (key !== CACHE_NAME) {
-          console.log('[Service Worker] Usuwanie starego cache:', key);
+          console.log('[Service Worker] Usuwanie starej wersji cache:', key);
           return caches.delete(key);
         }
       }));
     })
   );
+  // Od razu po aktywacji Service Worker zaczyna kontrolować stronę
   self.clients.claim();
 });
 
-// Serwowanie plików z cache podczas braku sieci
+// 3. Obsługa żądań HTTP (serwowanie z cache lub sieci)
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
+      // Zwróć plik z cache, a jeśli go tam nie ma, pobierz z Internetu
+      return response || fetch(e.request).catch(() => {
+        // Blok wyciszający błędy (np. niedostępność skryptu Google Tag Manager w trybie offline)
+        console.log('[Service Worker] Brak dostępu do sieci. Ignorowanie żądania dla:', e.request.url);
+      });
     })
   );
 });
