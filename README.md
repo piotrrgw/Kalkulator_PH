@@ -1,4 +1,4 @@
-# Kalkulator Karty Próby Hamulca (Wersja v3.4)
+# Kalkulator Karty Próby Hamulca (Wersja v3.5)
 
 Profesjonalne narzędzie dla maszynistów i rewidentów taboru kolejowego, służące do szybkiego i precyzyjnego obliczania parametrów hamulcowych pociągu (MHW, Rzeczywisty % masy hamującej) oraz generowania danych do Karty Próby Hamulca.
 
@@ -8,6 +8,9 @@ Aplikacja jest w pełni responsywna (RWD), zgodna ze standardami dostępności (
 
 ## 🚀 Funkcjonalności
 
+* **Aplikacja PWA (Progresywna Aplikacja Internetowa):**
+    * Możliwość instalacji kalkulatora na ekranie głównym telefonu, tabletu lub komputera (opcja "Dodaj do ekranu głównego" / "Zainstaluj").
+    * Obsługa trybu offline – po pierwszej wizycie kalkulator działa nawet bez dostępu do Internetu.
 * **Obliczenia w czasie rzeczywistym:**
     * Automatyczne przeliczanie wyników natychmiast po wprowadzeniu danych (brak konieczności klikania przycisku "Oblicz").
     * Masa Hamująca Wymagana (MHW) – zaokrąglanie w górę (bezpieczna strona).
@@ -28,20 +31,27 @@ Aplikacja jest w pełni responsywna (RWD), zgodna ze standardami dostępności (
 ## 🛠 Technologie
 
 * **HTML5 / CSS3:** Nowoczesny, responsywny layout (Mobile First).
-* **JavaScript (ES6+):** Logika obliczeń oraz "kuloodporna" weryfikacja poprawności wprowadzanych wartości (m m.in. zabezpieczenia przed nierealistycznymi wpisami).
+* **JavaScript (ES6+):** Logika obliczeń oraz weryfikacja poprawności wprowadzanych wartości (zabezpieczenia przed nierealistycznymi wpisami).
+* **PWA (Service Worker, Manifest):** Mechanizmy instalacji i wsparcie trybu offline.
 * **Google Analytics 4:** Monitorowanie ruchu.
 
 ## 📋 Jak używać
 
-1.  **Wybór pojazdów:** Kliknij na typ pojazdu z panelu bocznego "Predefiniowane składy", aby dodać go do listy.
-2.  **Konfiguracja:** Dla każdego dodanego pojazdu ustaw stan ładowności oraz nastawę hamulca.
-3.  **Dane ręczne:** Możesz ręcznie skorygować Masę Ogólną (MO) lub Masę Hamującą Rzeczywistą (MHR) w polach formularza. Kalkulator zapamięta Twoją zmianę, dopóki ręcznie nie wyczyścisz pola.
-4.  **Wymagany procent:** Wpisz wartość procentową masy hamującej wymaganej (PW) z rozkładu jazdy.
-5.  **Wynik:** Parametry przeliczane są samoczynnie na bieżąco. Jeśli parametry hamowania będą niewystarczające, pod wynikiem zapulsuje na czerwono odpowiedni komunikat ostrzegawczy.
+1.  **Instalacja (Opcjonalnie):** Wejdź na stronę w przeglądarce mobilnej (np. Chrome, Safari) lub desktopowej i z menu przeglądarki wybierz "Zainstaluj aplikację" lub "Dodaj do ekranu głównego".
+2.  **Wybór pojazdów:** Kliknij na typ pojazdu z panelu bocznego "Predefiniowane składy", aby dodać go do listy.
+3.  **Konfiguracja:** Dla każdego dodanego pojazdu ustaw stan ładowności oraz nastawę hamulca.
+4.  **Dane ręczne:** Możesz ręcznie skorygować Masę Ogólną (MO) lub Masę Hamującą Rzeczywistą (MHR) w polach formularza. Kalkulator zapamięta Twoją zmianę, dopóki ręcznie nie wyczyścisz pola.
+5.  **Wymagany procent:** Wpisz wartość procentową masy hamującej wymaganej (PW) z rozkładu jazdy.
+6.  **Wynik:** Parametry przeliczane są samoczynnie na bieżąco. Jeśli parametry hamowania będą niewystarczające, pod wynikiem zapulsuje na czerwono odpowiedni komunikat ostrzegawczy.
 
 ## 🔄 Historia zmian
 
-### v3.4 (Obecna)
+### v3.5 (Obecna)
+* Wdrożenie standardu PWA (Progressive Web App).
+* Dodanie pliku `manifest.json`, ikon oraz integracja Service Workera (`sw.js`).
+* Możliwość instalacji aplikacji na ekranie urządzenia i pełne wsparcie dla trybu offline.
+
+### v3.4
 * Usunięcie obsługi LocalStorage – formularz każdorazowo ładuje się w pełni wyczyszczony.
 * Dodanie ostrzeżeń bezpieczeństwa (pulsujący komunikat w przypadku PR < PW lub MHR < MHW).
 * Zabezpieczenie skryptu przed skrajnie nierealistycznymi wartościami wpisanymi z klawiatury.
@@ -66,5 +76,6 @@ Aplikacja jest w pełni responsywna (RWD), zgodna ze standardami dostępności (
 
 ## 🚂 Autorzy
 
-* **Piotr M 🚂** * **Gemini** ---
+* **Piotr M 🚂** * **Gemini**
+---
 *Aplikacja tworzona hobbystycznie, wspomagająca pracę na kolei. Zawsze weryfikuj wyniki z obowiązującymi przepisami.*
