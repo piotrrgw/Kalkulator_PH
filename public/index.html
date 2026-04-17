@@ -1,89 +1,695 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kalkulator karty próby hamulca</title>
+  
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#01263f">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.12.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.12.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.12.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Kalkulator PH">
 
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
+  <style>
+    :root{
+      --dark-navy: #01263f;
+      --orange: #e16036;
+      --cyan: #009dd8;
+      --gray: #c4c4c4;
+      --muted: #545b66;
+      --danger: #d32f2f;
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
+      color:var(--dark-navy);
+      -webkit-font-smoothing:antialiased;
+      padding:22px;
+      padding-bottom: 80px; 
+    }
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:20px;
+      margin-bottom:18px;
+    }
+    h1{ margin:0; font-weight:700; font-size:22px; }
 
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
-        }
+    .container{ display:grid; grid-template-columns: 1fr 420px; gap:28px; }
+
+    .card{ background:#fff; border-radius:12px; padding:18px; box-shadow: 0 8px 30px rgba(2,12,34,0.06); border:1px solid rgba(1,38,63,0.04); }
+
+    .grid-table{ width:100%; display:grid; grid-template-columns: 320px 1fr; border:3px solid var(--dark-navy); border-radius:8px; overflow:hidden; }
+    .grid-row{ display:contents; }
+    .cell{ padding:18px; border-bottom:2px solid rgba(1,38,63,0.07); border-right:2px solid rgba(1,38,63,0.07); min-height:56px; display:flex; align-items:center; }
+    .cell.left{ background: linear-gradient(180deg, rgba(1,38,63,0.02), rgba(1,38,63,0.00)); font-weight:700; text-transform:uppercase; font-size:15px; justify-content:center; text-align:center; letter-spacing:0.4px; }
+    .cell.right{ justify-content:flex-start; flex-direction:column; gap:6px; align-items: stretch; }
+
+    .input-wrapper { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .unit { font-weight: 700; color: var(--dark-navy); font-size: 16px; min-width: 20px; text-align: right; }
+
+    input[type="number"], input[type="text"], select {
+      flex: 1; font-size:16px; padding:10px 12px; border-radius:8px; border:1px solid rgba(1,38,63,0.12); font-weight:700;
+      transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.2);
+    }
+
+    input.readonly, input[readonly] { 
+      background:linear-gradient(180deg,#fff 0%, #f7fbff 100%); 
+      border:1px solid rgba(1,38,63,0.06); 
+      color: var(--dark-navy);
+      cursor: not-allowed;
+    }
+    
+    .note{ font-size:12px;color:var(--muted);margin-top:4px; }
+
+    @keyframes pulse-warning {
+      0% { opacity: 1; border-color: rgba(211, 47, 47, 1); box-shadow: 0 0 0 rgba(211, 47, 47, 0.4); }
+      50% { opacity: 0.7; border-color: rgba(211, 47, 47, 0.4); box-shadow: 0 0 10px rgba(211, 47, 47, 0.2); }
+      100% { opacity: 1; border-color: rgba(211, 47, 47, 1); box-shadow: 0 0 0 rgba(211, 47, 47, 0.4); }
+    }
+    
+    .warning-msg {
+      display: none;
+      color: var(--danger);
+      font-weight: 800;
+      font-size: 13px;
+      margin-top: 8px;
+      padding: 10px;
+      border: 2px dashed var(--danger);
+      border-radius: 8px;
+      background: #fffafa;
+      animation: pulse-warning 2s infinite ease-in-out;
+      text-align: center;
+    }
+
+    .presets{ display:flex; flex-direction:column; gap:14px; }
+    .panel{ border-radius:10px; padding:12px; background:linear-gradient(180deg,#ffffff,#fbfdff); border:1px solid rgba(1,38,63,0.05); box-shadow:0 6px 18px rgba(2,12,34,0.04); }
+    .panel-header{ text-align:center; }
+    .presets h3{ margin:6px 0 10px 0; font-size:16px; color:var(--dark-navy) }
+    .group-header{ width:100%; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:12px 0 4px 0; letter-spacing:0.5px; }
+
+    /* Zakładki (taby) */
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: rgba(1,38,63,0.04); padding: 6px; border-radius: 12px; }
+    .tab-btn { 
+      flex: 1; padding: 10px 6px; border: none; background: transparent; border-radius: 8px; 
+      cursor: pointer; font-weight: 700; color: var(--muted); transition: all 0.2s; 
+      display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; 
+    }
+    .tab-btn.active { background: #fff; color: var(--dark-navy); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .tab-btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.4); }
+    .tab-icon { font-size: 26px; }
+    
+    .coming-soon { text-align: center; padding: 30px 20px; color: var(--muted); background: linear-gradient(180deg, rgba(1,38,63,0.02), transparent); border-radius: 8px; border: 1px dashed rgba(1,38,63,0.15); margin-bottom: 12px; }
+
+    .vehicle-list{ display:flex; gap:8px; flex-wrap:wrap; }
+    .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; line-height:1.2; text-align:center; }
+    .vehicle-card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.08) }
+    .vehicle-card.active{ background:var(--orange); color:white; box-shadow:0 8px 22px rgba(225,96,54,0.15) }
+    .vehicle-card:focus, .btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(225, 96, 54, 0.4); }
+
+    .selected-list{ margin-top:8px; display:flex; flex-direction:column; gap:8px; min-height:60px }
+    .selected-item{ display:flex; gap:12px; align-items:center; justify-content:space-between; padding:10px; border-radius:8px; border:1px dashed rgba(1,38,63,0.15); background:#fff; flex-wrap:wrap; }
+    
+    .selected-item-info { flex: 1 1 150px; word-wrap: break-word; }
+    .selected-item-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+    
+    select.small, button.small { width: auto !important; flex: none !important; padding:6px 8px; border-radius:6px; border:1px solid rgba(1,38,63,0.15); background:transparent; font-size:14px; }
+
+    .btn{ display:inline-block; padding:12px 18px; border-radius:10px; cursor:pointer; border:0; font-weight:800; }
+    .btn.add{ background:var(--cyan); color:white }
+    .btn.remove{ background:var(--orange); color:white }
+
+    .errors{ margin-top:10px; color:var(--danger); font-weight:700 }
+    .result{ font-size:18px; font-weight:800; color:var(--dark-navy); }
+
+    .update-banner {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--dark-navy); color: white; padding: 12px 20px;
+      border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex; align-items: center; gap: 16px; z-index: 1000;
+      width: 90%; max-width: 450px; justify-content: space-between;
+      font-weight: 700; font-size: 14px;
+    }
+    .update-banner .btn { padding: 8px 14px; font-size: 13px; }
+
+    footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:center; }
+
+    @media (max-width:980px){
+      .container{ display:flex; flex-direction:column; }
+      .grid-table{ grid-template-columns: 40% 1fr; } .cell.left{ font-size:13px; padding:12px }
+      .panel-header{ text-align:left; }
+      .calculator-panel { order: 2; }
+      .presets-panel { order: 1; }
+    }
+    @media (max-width:540px){
+      .grid-table{ grid-template-columns: 1fr; }
+      .cell.left{ text-align:left; justify-content:flex-start; padding-left:16px }
+      .vehicle-card{ width:100%; text-align:center; }
+      .selected-item{ flex-direction:column; align-items:stretch; }
+      .selected-item-controls { justify-content: stretch; }
+      select.small, button.small{ width:100% !important; }
+      .update-banner { flex-direction: column; text-align: center; }
+      .update-banner .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="updateBanner" class="update-banner" role="alert" aria-live="assertive" style="display: none;">
+    <span>Dostępna jest nowa wersja aplikacji!</span>
+    <button id="updateBtn" class="btn add">Aktualizuj i odśwież</button>
+  </div>
+
+  <header><h1>Kalkulator karty próby hamulca</h1></header>
+
+  <main class="container">
+    <section class="card calculator-panel">
+      <h2 style="margin:0 0 12px 0; font-size:16px;">Wyniki kalkulatora</h2>
+
+      <div class="grid-table">
+        <div class="grid-row">
+          <div class="cell left" id="lbl-mo">Masa ogólna pociągu (MO)</div>
+          <div class="cell right">
+            <div class="input-wrapper">
+              <input id="masa-pociagu" type="text" value="0" aria-labelledby="lbl-mo" readonly class="readonly">
+              <span class="unit" aria-hidden="true">t</span>
+            </div>
+            <div class="note">Wartość uzupełniana z wybranej zakładki obok.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-mhw">Masa hamująca wymagana (MHW)</div>
+          <div class="cell right" aria-live="polite">
+            <div class="input-wrapper">
+              <input id="masa-wymagana" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-mhw">
+              <span class="unit" aria-hidden="true">t</span>
+            </div>
+            <div class="note">Obliczana jako: (MO × PW) / 100 zaokrąglana w górę.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-mhr">Masa hamująca rzeczywista (MHR)</div>
+          <div class="cell right">
+            <div class="input-wrapper">
+              <input id="masa-rzeczywista" type="text" value="0" aria-labelledby="lbl-mhr" readonly class="readonly">
+              <span class="unit" aria-hidden="true">t</span>
+            </div>
+            <div class="note">Wartość uzupełniana z wybranej zakładki obok.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-pw">Procent masy ham. wymaganej (PW)</div>
+          <div class="cell right">
+            <div class="input-wrapper">
+              <input id="percent-wymagane" type="text" value="" aria-labelledby="lbl-pw" readonly class="readonly">
+              <span class="unit" aria-hidden="true">%</span>
+            </div>
+            <div class="note">Wartość uzupełniana z wybranej zakładki obok.</div>
+          </div>
+        </div>
+
+        <div class="grid-row">
+          <div class="cell left" id="lbl-pr">Procent masy ham. rzeczywistej (PR)</div>
+          <div class="cell right" aria-live="polite">
+            <div class="input-wrapper">
+              <input id="percent-rzeczywiste" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-pr">
+              <span class="unit" aria-hidden="true">%</span>
+            </div>
+	        <div class="note">Obliczana jako: (MHR × 100) / MO zaokrąglana w dół.</div>
+            
+            <div id="pr-warning" class="warning-msg" role="alert">
+              Procent rzeczywisty jest mniejszy od procentu wymaganego. Postępuj zgodnie z przepisami.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-row" id="dlugosc-skladu-row" style="display: none;">
+          <div class="cell left" id="lbl-len">Długość składu</div>
+          <div class="cell right">
+            <div class="input-wrapper">
+              <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-len">
+              <span class="unit" aria-hidden="true">m</span>
+            </div>
+            <div class="note">Suma długości dodanych pojazdów z bazy.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:14px;">
+        <button id="resetBtn" class="btn remove" style="flex:1; padding:14px 22px; font-size:16px;">Resetuj kalkulator</button>
+      </div>
+
+      <div id="status" class="errors" role="alert" aria-live="assertive"></div>
+
+      <footer>
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.11
+      </footer>
+    </section>
+
+    <aside class="presets presets-panel">
+      <div class="panel">
+        
+        <div class="tabs" role="tablist" aria-label="Wybór bazy taboru">
+          <button role="tab" aria-selected="true" aria-controls="panel-zespoly" id="tab-zespoly" class="tab-btn active">
+            <span class="tab-icon">🚄</span> Składy Zespolone
+          </button>
+          <button role="tab" aria-selected="false" aria-controls="panel-lokomotywy" id="tab-lokomotywy" class="tab-btn">
+            <span class="tab-icon">🚂</span> Lokomotywy
+          </button>
+          <button role="tab" aria-selected="false" aria-controls="panel-recznie" id="tab-recznie" class="tab-btn">
+            <span class="tab-icon">✍️</span> Ręcznie
+          </button>
+        </div>
+
+        <div id="panel-zespoly" role="tabpanel" aria-labelledby="tab-zespoly">
+          <div class="panel-header"> <h3>Predefiniowane składy zespolone <br><br>PAMIĘTAJ! <br> WYBRAĆ PRAWIDŁOWE PARAMETRY</h3> </div>
+          <div class="vehicle-list" id="presetButtons"></div>
+          
+          <div style="margin-top:12px; display:flex; gap:12px;">
+            <button id="addPreset" class="btn add" style="flex:1;">Dodaj skład</button>
+            <button id="clearAll" class="btn remove" style="flex:1;">Wyczyść listę</button>
+          </div>
+          
+          <div class="selected-list" id="selectedList" style="margin-top:12px" aria-live="polite"></div>
+        </div>
+
+        <div id="panel-lokomotywy" role="tabpanel" aria-labelledby="tab-lokomotywy" hidden>
+          <div class="coming-soon">
+            <span style="font-size: 36px; display: block; margin-bottom: 8px;">🚧 👷‍♂️</span>
+            <strong>Opcja w trakcie tworzenia</strong><br><br>
+            Baza lokomotyw pojawi się w kolejnej aktualizacji aplikacji.
+          </div>
+        </div>
+
+        <div id="panel-recznie" role="tabpanel" aria-labelledby="tab-recznie" hidden>
+          <div class="panel-header"> <h3 style="margin: 0;">Wprowadź dane z dokumentów</h3> </div>
+          
+          <div style="display:flex; flex-direction:column; gap:16px; margin-top:18px;">
+            <div>
+              <label for="manual-mo" style="font-size:13px; font-weight:700; color:var(--muted); margin-bottom: 4px; display: block;">Masa ogólna pociągu (MO)</label>
+              <div class="input-wrapper">
+                <input id="manual-mo" type="number" min="0" step="0.1" value="" placeholder="np. 250">
+                <span class="unit">t</span>
+              </div>
+            </div>
+            
+            <div>
+              <label for="manual-mhr" style="font-size:13px; font-weight:700; color:var(--muted); margin-bottom: 4px; display: block;">Masa hamująca rzeczywista (MHR)</label>
+              <div class="input-wrapper">
+                <input id="manual-mhr" type="number" min="0" step="0.1" value="" placeholder="np. 400">
+                <span class="unit">t</span>
+              </div>
+            </div>
+
+            <div style="padding-top: 10px; border-top: 1px dashed rgba(1,38,63,0.15);">
+              <label for="manual-pw" style="font-size:13px; font-weight:700; color:var(--muted); margin-bottom: 4px; display: block;">Wymagany procent z WRJ (PW)</label>
+              <div class="input-wrapper">
+                <input id="manual-pw" type="number" min="0" max="100" step="0.1" value="" placeholder="np. 65">
+                <span class="unit">%</span>
+              </div>
+            </div>
+            
+            <button id="clearManualBtn" class="btn remove" style="margin-top:4px;">Wyczyść ręczne wpisy</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="panel" id="summary-panel">
+        <h3>Podsumowanie bazy pojazdów</h3>
+        <div style="display:flex; justify-content:space-between; gap:8px;">
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Suma MO (t)</div>
+            <div id="sum-mo" class="result">0</div>
+          </div>
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Suma MHR (t)</div>
+            <div id="sum-mhr" class="result">0</div>
+          </div>
+          <div>
+            <div style="font-size:13px; color:var(--muted)">Długość (m)</div>
+            <div id="sum-len" class="result">0</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; border-top: 1px solid rgba(1,38,63,0.1); padding-top: 16px;">
+          <label for="preset-pw" style="font-size:13px; font-weight:700; color:var(--muted); margin-bottom: 4px; display: block;">Wymagany procent z WRJ (PW)</label>
+          <div class="input-wrapper">
+            <input id="preset-pw" type="number" min="0" max="100" step="0.1" placeholder="np. 65">
+            <span class="unit">%</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Główne pola wyników (wszystkie readonly)
+    const masaPociaguInput = document.getElementById('masa-pociagu');
+    const masaRzeczywistaInput = document.getElementById('masa-rzeczywista');
+    const percentWymaganeInput = document.getElementById('percent-wymagane');
+    
+    // Pola z zakładki "Ręcznie"
+    const manualMoInput = document.getElementById('manual-mo');
+    const manualMhrInput = document.getElementById('manual-mhr');
+    const manualPwInput = document.getElementById('manual-pw');
+    const clearManualBtn = document.getElementById('clearManualBtn');
+
+    // Pole z zakładki podsumowania taboru
+    const presetPwInput = document.getElementById('preset-pw');
+
+    // --- Obsługa zakładek (Tabów) ---
+    const tabZespoly = document.getElementById('tab-zespoly');
+    const tabLokomotywy = document.getElementById('tab-lokomotywy');
+    const tabRecznie = document.getElementById('tab-recznie');
+    const panelZespoly = document.getElementById('panel-zespoly');
+    const panelLokomotywy = document.getElementById('panel-lokomotywy');
+    const panelRecznie = document.getElementById('panel-recznie');
+    const summaryPanel = document.getElementById('summary-panel');
+
+    function switchTab(tabName) {
+      [tabZespoly, tabLokomotywy, tabRecznie].forEach(t => { 
+          t.setAttribute('aria-selected', 'false'); 
+          t.classList.remove('active'); 
       });
-    </script>
-  </body>
+      [panelZespoly, panelLokomotywy, panelRecznie].forEach(p => p.setAttribute('hidden', ''));
+
+      if(tabName === 'zespoly') {
+        tabZespoly.setAttribute('aria-selected', 'true');
+        tabZespoly.classList.add('active');
+        panelZespoly.removeAttribute('hidden');
+        summaryPanel.style.display = 'block';
+        renderList(); 
+      } else if(tabName === 'lokomotywy') {
+        tabLokomotywy.setAttribute('aria-selected', 'true');
+        tabLokomotywy.classList.add('active');
+        panelLokomotywy.removeAttribute('hidden');
+        summaryPanel.style.display = 'block';
+        renderList();
+      } else if(tabName === 'recznie') {
+        tabRecznie.setAttribute('aria-selected', 'true');
+        tabRecznie.classList.add('active');
+        panelRecznie.removeAttribute('hidden');
+        summaryPanel.style.display = 'none'; 
+        syncManualToMain(); 
+      }
+    }
+
+    tabZespoly.addEventListener('click', () => switchTab('zespoly'));
+    tabLokomotywy.addEventListener('click', () => switchTab('lokomotywy'));
+    tabRecznie.addEventListener('click', () => switchTab('recznie'));
+
+    // Bliźniacza synchronizacja pola PW między oknami, by nie tracić danych po zmianie zakładki
+    function syncPwFromPreset() {
+        manualPwInput.value = presetPwInput.value;
+        percentWymaganeInput.value = presetPwInput.value;
+        calculateResults();
+    }
+
+    function syncPwFromManual() {
+        presetPwInput.value = manualPwInput.value;
+        percentWymaganeInput.value = manualPwInput.value;
+        calculateResults();
+    }
+
+    presetPwInput.oninput = syncPwFromPreset;
+    manualPwInput.oninput = syncPwFromManual;
+
+    // Synchronizacja zakładki "Ręcznie" z głównym formularzem
+    function syncManualToMain() {
+        if(tabRecznie.classList.contains('active')) {
+            masaPociaguInput.value = manualMoInput.value || "0";
+            masaRzeczywistaInput.value = manualMhrInput.value || "0";
+            dlugoscSkladuRow.style.display = 'none';
+            calculateResults();
+        }
+    }
+
+    manualMoInput.oninput = syncManualToMain;
+    manualMhrInput.oninput = syncManualToMain;
+
+    clearManualBtn.onclick = () => {
+        manualMoInput.value = "";
+        manualMhrInput.value = "";
+        manualPwInput.value = "";
+        presetPwInput.value = ""; // Czyści oba pola PW dla spójności
+        syncManualToMain();
+    };
+    // ---------------------------------
+
+    // System aktualizacji Service Workera
+    let newWorker;
+    const updateBanner = document.getElementById('updateBanner');
+    const updateBtn = document.getElementById('updateBtn');
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            setInterval(() => { registration.update(); }, 86400000); 
+            registration.addEventListener('updatefound', () => {
+              newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  updateBanner.style.display = 'flex';
+                }
+              });
+            });
+          })
+          .catch(err => console.error('Błąd rejestracji SW:', err));
+
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) { window.location.reload(); refreshing = true; }
+        });
+      });
+    }
+
+    updateBtn.addEventListener('click', () => {
+      if (newWorker) newWorker.postMessage({ action: 'skipWaiting' });
+    });
+
+    let PRESET_GROUPS = {};
+    let PRESETS = {};
+
+    const presetButtons = document.getElementById('presetButtons');
+    const addPresetBtn = document.getElementById('addPreset');
+    const clearAllBtn = document.getElementById('clearAll');
+    const selectedList = document.getElementById('selectedList');
+    const sumMoEl = document.getElementById('sum-mo');
+    const sumMhrEl = document.getElementById('sum-mhr');
+    const sumLenEl = document.getElementById('sum-len');
+
+    const dlugoscSkladuRow = document.getElementById('dlugosc-skladu-row');
+    const dlugoscSkladuField = document.getElementById('dlugosc-skladu');
+    const masaWymaganaField = document.getElementById('masa-wymagana');
+    const percentRzeczywisteField = document.getElementById('percent-rzeczywiste');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusDiv = document.getElementById('status');
+    const warningMsg = document.getElementById('pr-warning');
+
+    let selectedVehicles = [];
+
+    // Pobieranie danych z JSON
+    fetch('./zespoly_trakcyjne.json')
+      .then(r => r.json())
+      .then(data => {
+        PRESET_GROUPS = data;
+        PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
+        
+        Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
+          const groupHeader = document.createElement('div');
+          groupHeader.className = 'group-header';
+          groupHeader.textContent = groupName;
+          presetButtons.appendChild(groupHeader);
+
+          Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'vehicle-card';
+            btn.type = 'button';
+            btn.dataset.key = key;
+            btn.innerText = PRESETS[key].label;
+            btn.onclick = () => {
+              document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+            };
+            presetButtons.appendChild(btn);
+          });
+        });
+      })
+      .catch(error => {
+        statusDiv.textContent = "Błąd pobierania bazy pojazdów.";
+      });
+
+    function calculateResults() {
+        statusDiv.textContent = "";
+        warningMsg.style.display = "none";
+
+        let MO = parseFloat(masaPociaguInput.value);
+        let MHR = parseFloat(masaRzeczywistaInput.value);
+        let PW = parseFloat(percentWymaganeInput.value);
+
+        if (MO > 20000 || MHR > 20000 || PW > 300) {
+            statusDiv.textContent = "Wprowadzono nierealistyczne wartości.";
+            masaWymaganaField.value = "0"; percentRzeczywisteField.value = "0"; return;
+        }
+
+        if (isNaN(MO) || MO <= 0 || isNaN(MHR) || MHR <= 0 || isNaN(PW) || PW <= 0) {
+            masaWymaganaField.value = "0"; percentRzeczywisteField.value = "0"; return;
+        }
+
+        const wymagane = Math.ceil((MO * PW) / 100);
+        const rzeczywiste = Math.floor((MHR * 100) / MO);
+
+        masaWymaganaField.value = wymagane;
+        percentRzeczywisteField.value = rzeczywiste;
+
+        if (rzeczywiste < PW || MHR < wymagane) {
+            warningMsg.style.display = "block";
+        }
+    }
+
+    addPresetBtn.onclick = ()=>{
+      const active = document.querySelector('.vehicle-card.active');
+      if(!active){ statusDiv.textContent="Wybierz serię pojazdu."; return; }
+      addVehicle(active.dataset.key);
+      active.classList.remove('active');
+    };
+
+    function addVehicle(key){
+      const preset = PRESETS[key];
+      selectedVehicles.push({
+        id: Date.now(), presetKey:key, loadState:'ladowny', brakingSetting:Object.keys(preset.braking)[0]
+      });
+      renderList();
+    }
+
+    function brakingMass(v){
+      const p = PRESETS[v.presetKey];
+      if(p.noLoadSplitForBraking){ return p.braking[v.brakingSetting]; }
+      return p.braking[v.brakingSetting][v.loadState];
+    }
+
+    function renderList(){
+      selectedList.innerHTML="";
+      if(!selectedVehicles.length){ 
+        const emptyDiv = document.createElement('div');
+        emptyDiv.textContent = 'Brak dodanych pojazdów.';
+        emptyDiv.style.color = 'var(--muted)';
+        selectedList.appendChild(emptyDiv);
+      }
+      selectedVehicles.forEach(v=>{
+        const p = PRESETS[v.presetKey];
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'selected-item';
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'selected-item-info';
+        
+        const labelDiv = document.createElement('div');
+        labelDiv.style.fontWeight = '800';
+        labelDiv.textContent = p.label;
+        
+        const detailsDiv = document.createElement('div');
+        detailsDiv.style.fontSize = '13px';
+        detailsDiv.style.color = 'var(--muted)';
+        detailsDiv.textContent = `Dł: ${p.length}m — MO: ${p.mo[v.loadState]} t — Mhr: ${brakingMass(v)} t`;
+        infoDiv.append(labelDiv, detailsDiv);
+
+        const controlsDiv = document.createElement('div');
+        controlsDiv.className = 'selected-item-controls';
+
+        const loadSelect = document.createElement('select');
+        loadSelect.className = 'small load';
+        loadSelect.innerHTML = `<option value="prozny">Próżny</option><option value="ladowny">Ładowny</option>`;
+        loadSelect.value = v.loadState;
+        loadSelect.onchange = e => { v.loadState = e.target.value; renderList(); };
+
+        const brakeSelect = document.createElement('select');
+        brakeSelect.className = 'small brake';
+        brakeSelect.innerHTML = Object.keys(p.braking).map(b => `<option value="${b}">${b}</option>`).join('');
+        brakeSelect.value = v.brakingSetting;
+        brakeSelect.onchange = e => { v.brakingSetting = e.target.value; renderList(); };
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn remove small';
+        removeBtn.textContent = 'Usuń';
+        removeBtn.onclick = () => {
+          selectedVehicles = selectedVehicles.filter(x => x.id !== v.id);
+          renderList();
+        };
+
+        controlsDiv.append(loadSelect, brakeSelect, removeBtn);
+        itemDiv.append(infoDiv, controlsDiv);
+        selectedList.appendChild(itemDiv);
+      });
+
+      const mo=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].mo[v.loadState],0);
+      const mhr=selectedVehicles.reduce((s,v)=>s+brakingMass(v),0);
+      const len=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].length,0);
+
+      sumMoEl.textContent=mo.toFixed(1);
+      sumMhrEl.textContent=mhr.toFixed(1);
+      sumLenEl.textContent=Math.ceil(len);
+
+      if(!tabRecznie.classList.contains('active')) {
+          masaPociaguInput.value=mo.toFixed(1);
+          masaRzeczywistaInput.value=mhr.toFixed(1);
+          
+          if (selectedVehicles.length > 0) {
+            dlugoscSkladuRow.style.display = 'contents';
+            dlugoscSkladuField.value = Math.ceil(len);
+          } else {
+            dlugoscSkladuRow.style.display = 'none';
+          }
+      }
+
+      calculateResults();
+    }
+
+    function resetAllData() {
+      // Czyszczenie bazy
+      selectedVehicles = [];
+      // Czyszczenie ręcznych
+      manualMoInput.value = "";
+      manualMhrInput.value = "";
+      manualPwInput.value = "";
+      presetPwInput.value = "";
+      // Czyszczenie gównego PW
+      percentWymaganeInput.value = "";
+      
+      statusDiv.textContent = "";
+      warningMsg.style.display = "none";
+      
+      // Odświeżenie w zależności od wybranej zakładki
+      if(tabRecznie.classList.contains('active')) {
+          syncManualToMain();
+      } else {
+          renderList();
+      }
+    }
+
+    resetBtn.onclick = resetAllData;
+    clearAllBtn.onclick = resetAllData;
+
+    renderList();
+    document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Kalkulator PH.`
+  </script>
+
+</body>
 </html>
