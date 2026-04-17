@@ -31,7 +31,7 @@
       color:var(--dark-navy);
       -webkit-font-smoothing:antialiased;
       padding:22px;
-      padding-bottom: 80px; /* Miejsce na pływający baner aktualizacji */
+      padding-bottom: 80px; 
     }
 
     header{
@@ -95,14 +95,25 @@
     .presets h3{ margin:6px 0 10px 0; font-size:16px; color:var(--dark-navy) }
     .group-header{ width:100%; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:12px 0 4px 0; letter-spacing:0.5px; }
 
+    /* Stylowanie nowych zakładek (tabów) */
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: rgba(1,38,63,0.04); padding: 6px; border-radius: 12px; }
+    .tab-btn { 
+      flex: 1; padding: 10px 6px; border: none; background: transparent; border-radius: 8px; 
+      cursor: pointer; font-weight: 700; color: var(--muted); transition: all 0.2s; 
+      display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; 
+    }
+    .tab-btn.active { background: #fff; color: var(--dark-navy); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .tab-btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.4); }
+    .tab-icon { font-size: 26px; }
+    
+    /* Panel w budowie */
+    .coming-soon { text-align: center; padding: 30px 20px; color: var(--muted); background: linear-gradient(180deg, rgba(1,38,63,0.02), transparent); border-radius: 8px; border: 1px dashed rgba(1,38,63,0.15); margin-bottom: 12px; }
+
     .vehicle-list{ display:flex; gap:8px; flex-wrap:wrap; }
     .vehicle-card{ background:linear-gradient(180deg,#ffffff,#fff7f2); border-radius:8px; padding:8px 10px; cursor:pointer; border:1px solid rgba(0,0,0,0.04); font-weight:800; color:var(--dark-navy); transition:transform .12s ease, box-shadow .12s ease; line-height:1.2; text-align:center; }
     .vehicle-card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.08) }
     .vehicle-card.active{ background:var(--orange); color:white; box-shadow:0 8px 22px rgba(225,96,54,0.15) }
-    .vehicle-card:focus, .btn:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(225, 96, 54, 0.4);
-    }
+    .vehicle-card:focus, .btn:focus { outline: none; box-shadow: 0 0 0 3px rgba(225, 96, 54, 0.4); }
 
     .selected-list{ margin-top:8px; display:flex; flex-direction:column; gap:8px; min-height:60px }
     .selected-item{ display:flex; gap:12px; align-items:center; justify-content:space-between; padding:10px; border-radius:8px; border:1px dashed rgba(1,38,63,0.15); background:#fff; flex-wrap:wrap; }
@@ -115,30 +126,18 @@
     .btn{ display:inline-block; padding:12px 18px; border-radius:10px; cursor:pointer; border:0; font-weight:800; }
     .btn.add{ background:var(--cyan); color:white }
     .btn.remove{ background:var(--orange); color:white }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .errors{ margin-top:10px; color:var(--danger); font-weight:700 }
     .result{ font-size:18px; font-weight:800; color:var(--dark-navy); }
 
-    /* CSS dla powiadomienia o aktualizacji PWA */
     .update-banner {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--dark-navy);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      z-index: 1000;
-      width: 90%;
-      max-width: 450px;
-      justify-content: space-between;
-      font-weight: 700;
-      font-size: 14px;
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--dark-navy); color: white; padding: 12px 20px;
+      border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex; align-items: center; gap: 16px; z-index: 1000;
+      width: 90%; max-width: 450px; justify-content: space-between;
+      font-weight: 700; font-size: 14px;
     }
     .update-banner .btn { padding: 8px 14px; font-size: 13px; }
 
@@ -184,7 +183,7 @@
               <input id="masa-pociagu" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mo">
               <span class="unit" aria-hidden="true">t</span>
             </div>
-            <div class="note">Wprowadź ręcznie lub użyj predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
+            <div class="note">Wprowadź ręcznie lub użyj bazy pojazdów. Pamiętaj wybrać prawidłowe parametry!</div>
           </div>
         </div>
 
@@ -206,7 +205,7 @@
               <input id="masa-rzeczywista" type="number" min="0" step="0.1" value="0" aria-labelledby="lbl-mhr">
               <span class="unit" aria-hidden="true">t</span>
             </div>
-            <div class="note">Wpisz ręcznie lub uzupełnij z predefiniowanych pojazdów - PAMIĘTAJ WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU.</div>
+            <div class="note">Wpisz ręcznie lub uzupełnij z bazy pojazdów. Pamiętaj wybrać prawidłowe parametry!</div>
           </div>
         </div>
 
@@ -243,7 +242,7 @@
               <input id="dlugosc-skladu" class="readonly" type="text" readonly value="0" aria-labelledby="lbl-len">
               <span class="unit" aria-hidden="true">m</span>
             </div>
-            <div class="note">Suma długości predefiniowanych pojazdów.</div>
+            <div class="note">Suma długości dodanych pojazdów z bazy.</div>
           </div>
         </div>
       </div>
@@ -255,25 +254,45 @@
       <div id="status" class="errors" role="alert" aria-live="assertive"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.7
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.8
       </footer>
     </section>
 
     <aside class="presets presets-panel">
       <div class="panel">
-        <div class="panel-header"> <h3>Predefiniowane składy zespolone <br><br>PAMIĘTAJ! <br> WYBRAĆ PRAWIDŁOWE PARAMETRY POJAZDU</h3> </div>
-        <div class="vehicle-list" id="presetButtons"></div>
+        
+        <div class="tabs" role="tablist" aria-label="Wybór bazy taboru">
+          <button role="tab" aria-selected="true" aria-controls="panel-zespoly" id="tab-zespoly" class="tab-btn active">
+            <span class="tab-icon">🚄</span> Składy Zespolone
+          </button>
+          <button role="tab" aria-selected="false" aria-controls="panel-lokomotywy" id="tab-lokomotywy" class="tab-btn">
+            <span class="tab-icon">🚂</span> Lokomotywy
+          </button>
+        </div>
 
-        <div style="margin-top:12px; display:flex; gap:12px;">
-          <button id="addPreset" class="btn add" style="flex:1;">Dodaj pojazd</button>
-          <button id="clearAll" class="btn remove" style="flex:1;">Wyczyść</button>
+        <div id="panel-zespoly" role="tabpanel" aria-labelledby="tab-zespoly">
+          <div class="panel-header"> <h3>Predefiniowane składy zespolone <br><br>PAMIĘTAJ! <br> WYBRAĆ PRAWIDŁOWE PARAMETRY</h3> </div>
+          <div class="vehicle-list" id="presetButtons"></div>
+          
+          <div style="margin-top:12px; display:flex; gap:12px;">
+            <button id="addPreset" class="btn add" style="flex:1;">Dodaj skład</button>
+            <button id="clearAll" class="btn remove" style="flex:1;">Wyczyść listę</button>
+          </div>
+        </div>
+
+        <div id="panel-lokomotywy" role="tabpanel" aria-labelledby="tab-lokomotywy" hidden>
+          <div class="coming-soon">
+            <span style="font-size: 36px; display: block; margin-bottom: 8px;">🚧 👷‍♂️</span>
+            <strong>Opcja w trakcie tworzenia</strong><br><br>
+            Baza lokomotyw pojawi się w kolejnej aktualizacji aplikacji.
+          </div>
         </div>
 
         <div class="selected-list" id="selectedList" style="margin-top:12px" aria-live="polite"></div>
       </div>
 
       <div class="panel">
-        <h3>Podsumowanie</h3>
+        <h3>Podsumowanie dodanych pojazdów</h3>
         <div style="display:flex; justify-content:space-between; gap:8px;">
           <div>
             <div style="font-size:13px; color:var(--muted)">Suma MO (t)</div>
@@ -293,6 +312,34 @@
   </main>
 
   <script>
+    // --- Obsługa zakładek (Tabów) ---
+    const tabZespoly = document.getElementById('tab-zespoly');
+    const tabLokomotywy = document.getElementById('tab-lokomotywy');
+    const panelZespoly = document.getElementById('panel-zespoly');
+    const panelLokomotywy = document.getElementById('panel-lokomotywy');
+
+    function switchTab(tabName) {
+      if(tabName === 'zespoly') {
+        tabZespoly.setAttribute('aria-selected', 'true');
+        tabZespoly.classList.add('active');
+        tabLokomotywy.setAttribute('aria-selected', 'false');
+        tabLokomotywy.classList.remove('active');
+        panelZespoly.removeAttribute('hidden');
+        panelLokomotywy.setAttribute('hidden', '');
+      } else {
+        tabLokomotywy.setAttribute('aria-selected', 'true');
+        tabLokomotywy.classList.add('active');
+        tabZespoly.setAttribute('aria-selected', 'false');
+        tabZespoly.classList.remove('active');
+        panelLokomotywy.removeAttribute('hidden');
+        panelZespoly.setAttribute('hidden', '');
+      }
+    }
+
+    tabZespoly.addEventListener('click', () => switchTab('zespoly'));
+    tabLokomotywy.addEventListener('click', () => switchTab('lokomotywy'));
+    // ---------------------------------
+
     // System aktualizacji Service Workera
     let newWorker;
     const updateBanner = document.getElementById('updateBanner');
@@ -304,18 +351,14 @@
           .then(registration => {
             console.log('Service Worker zarejestrowany pomyślnie.', registration.scope);
             
-            // Logika sprawdzania nowej wersji co 24 godziny w tle
             setInterval(() => {
               registration.update();
-              console.log('[Service Worker] Automatyczne sprawdzanie nowej wersji (co 24h)...');
-            }, 86400000); // 24 * 60 * 60 * 1000 = 86400000 ms
+            }, 86400000); 
 
-            // Nasłuchuj nowej wersji instancji SW
             registration.addEventListener('updatefound', () => {
               newWorker = registration.installing;
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // Nowa wersja pobrana i gotowa do instalacji, pokazujemy interfejs (UI)
                   updateBanner.style.display = 'flex';
                 }
               });
@@ -325,7 +368,6 @@
             console.error('Błąd rejestracji Service Workera:', error);
           });
 
-        // Wymuś odświeżenie strony po przejęciu kontroli przez nowego Service Workera
         let refreshing = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
           if (!refreshing) {
@@ -368,7 +410,7 @@
     let userEditedMO = false;
     let userEditedMHR = false;
 
-    // Asynchroniczne ładowanie bazy pojazdów z pliku JSON
+    // Pobieranie danych z JSON
     fetch('./zespoly_trakcyjne.json')
       .then(response => {
         if(!response.ok) throw new Error("Sieć odpowiedziała błędem podczas ładowania json.");
@@ -378,7 +420,6 @@
         PRESET_GROUPS = data;
         PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
         
-        // Wygeneruj przyciski po załadowaniu danych
         Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
           const groupHeader = document.createElement('div');
           groupHeader.className = 'group-header';
@@ -404,7 +445,6 @@
         statusDiv.textContent = "Błąd pobierania bazy pojazdów. Sprawdź połączenie i odśwież stronę.";
       });
 
-    // Dynamiczne obliczanie wyników
     function calculateResults() {
         statusDiv.textContent = "";
         warningMsg.style.display = "none";
@@ -413,7 +453,6 @@
         let MHR = parseFloat(masaRzeczywistaInput.value);
         let PW = parseFloat(percentWymaganeInput.value);
 
-        // Sanity checks dla "kuloodporności"
         if (MO > 20000 || MHR > 20000 || PW > 300) {
             statusDiv.textContent = "Wprowadzono nierealistyczne wartości.";
             masaWymaganaField.value = "0";
@@ -433,7 +472,6 @@
         masaWymaganaField.value = wymagane;
         percentRzeczywisteField.value = rzeczywiste;
 
-        // Kontrola bezpieczeństwa z wymuszonym wyświetleniem alertu
         if (rzeczywiste < PW || MHR < wymagane) {
             warningMsg.style.display = "block";
         }
@@ -541,10 +579,9 @@
         dlugoscSkladuRow.style.display = 'none';
       }
 
-      calculateResults(); // przelicz automatycznie
+      calculateResults();
     }
 
-    // Auto-przeliczanie przy ręcznych zmianach z odblokowaniem przy kasowaniu
     masaPociaguInput.oninput = (e) => { 
         if(e.target.value === "" || parseFloat(e.target.value) === 0) {
             userEditedMO = false; 
@@ -567,7 +604,6 @@
 
     percentWymaganeInput.oninput = () => { calculateResults(); };
 
-    // Zintegrowana funkcja resetująca
     function resetAllData() {
       selectedVehicles = [];
       masaPociaguInput.value = "0";
@@ -594,7 +630,6 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-W05T4L1HFD');
   </script>
 
