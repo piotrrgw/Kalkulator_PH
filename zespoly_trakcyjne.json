@@ -1,0 +1,53 @@
+{
+  "PESA": {
+    "ED74": {
+      "label": "ED74",
+      "length": 80.3,
+      "mo": { "prozny": 161, "ladowny": 171 },
+      "braking": { "R+Mg": { "prozny": 0, "ladowny": 0 }, "R": { "prozny": 0, "ladowny": 0 } }
+    },
+    "ED161": {
+      "label": "ED161",
+      "length": 150.2,
+      "mo": { "prozny": 249, "ladowny": 278 },
+      "braking": { "R+Mg": { "prozny": 408, "ladowny": 454 }, "R": { "prozny": 386, "ladowny": 430 } }
+    }
+  },
+  "STADLER": {
+    "ED160-stary": {
+      "label": "ED160 STARY",
+      "length": 152.9,
+      "mo": { "prozny": 252, "ladowny": 281 },
+      "braking": { "R+Mg": { "prozny": 458, "ladowny": 511 }, "R": { "prozny": 426, "ladowny": 475 } }
+    },
+    "ED160-nowy": {
+      "label": "ED160 NOWY",
+      "length": 152.9,
+      "mo": { "prozny": 252, "ladowny": 281 },
+      "braking": { "R+Mg": { "prozny": 478, "ladowny": 533 }, "R": { "prozny": 428, "ladowny": 477 } }
+    }
+  },
+  "ALSTOM": {
+    "ED250": {
+      "label": "ED250",
+      "length": 187.4,
+      "mo": { "prozny": 414, "ladowny": 445 },
+      "braking": { "R+Mg": 915, "R": 773 },
+      "noLoadSplitForBraking": true
+    }
+  },
+  "SKPL": {
+    "SN84": {
+      "label": "SN84 - SKPL",
+      "length": 74.480,
+      "mo": { "prozny": 124, "ladowny": 139 },
+      "braking": { "R": { "prozny": 209, "ladowny": 209 } }
+    },
+    "SD85": {
+      "label": "SD85 - SKPL",
+      "length": 52.340,
+      "mo": { "prozny": 97, "ladowny": 119 },
+      "braking": { "R+Mg": { "prozny": 143, "ladowny": 143 }, "R": { "prozny": 119, "ladowny": 119 } }
+    }
+  }
+}
