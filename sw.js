@@ -1,11 +1,13 @@
+// Wersja: v3.7
 // Numer wersji musi być zmieniany przy każdej aktualizacji plików aplikacji
-const CACHE_NAME = 'kalkulator-ph-v3.6';
+const CACHE_NAME = 'kalkulator-ph-v3.7';
 
 // Najważniejsze pliki niezbędne do działania offline
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './zespoly_trakcyjne.json',
   './favicon.svg',
   './apple-touch-icon.png',
   './icon-192x192.png',
@@ -16,7 +18,7 @@ const ASSETS = [
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Zapisywanie plików do pamięci...');
+      console.log('[Service Worker] Zapisywanie plików do pamięci v3.7...');
       // Używamy mapowania z catch, aby brak jednego pliku (np. ikony) 
       // nie zablokował zapisania całego kalkulatora do działania offline.
       return Promise.all(
@@ -28,8 +30,14 @@ self.addEventListener('install', (e) => {
       );
     })
   );
-  // Zmusza nowy SW do natychmiastowego przejęcia kontroli (wymusza aktualizację)
-  self.skipWaiting(); 
+  // UWAGA: Usunięto sztywne self.skipWaiting(), aby aktualizacja następowała po kliknięciu w baner
+});
+
+// Nasłuchiwanie na polecenie wymuszenia aktualizacji ze strony użytkownika (kliknięcie Aktualizuj)
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 // 2. Czyszczenie starego cache (niezbędne, aby użytkownicy widzieli nowe wersje)
