@@ -31,6 +31,7 @@
       color:var(--dark-navy);
       -webkit-font-smoothing:antialiased;
       padding:22px;
+      padding-bottom: 80px; /* Miejsce na pływający baner aktualizacji */
     }
 
     header{
@@ -118,6 +119,29 @@
     .errors{ margin-top:10px; color:var(--danger); font-weight:700 }
     .result{ font-size:18px; font-weight:800; color:var(--dark-navy); }
 
+    /* CSS dla powiadomienia o aktualizacji PWA */
+    .update-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark-navy);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      width: 90%;
+      max-width: 450px;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .update-banner .btn { padding: 8px 14px; font-size: 13px; }
+
     footer{ margin-top:18px; font-size:13px; color:var(--muted); text-align:center; }
     footer a{ color:var(--cyan); text-decoration:none; font-weight:700; }
 
@@ -135,10 +159,17 @@
       .selected-item{ flex-direction:column; align-items:stretch; }
       .selected-item-controls { justify-content: stretch; }
       select.small, button.small{ width:100% !important; }
+      .update-banner { flex-direction: column; text-align: center; }
+      .update-banner .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
+  <div id="updateBanner" class="update-banner" role="alert" aria-live="assertive" style="display: none;">
+    <span>Dostępna jest nowa wersja aplikacji!</span>
+    <button id="updateBtn" class="btn add">Aktualizuj i odśwież</button>
+  </div>
+
   <header><h1>Kalkulator karty próby hamulca</h1></header>
 
   <main class="container">
@@ -224,7 +255,7 @@
       <div id="status" class="errors" role="alert" aria-live="assertive"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.5
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.7
       </footer>
     </section>
 
@@ -262,75 +293,57 @@
   </main>
 
   <script>
-    // Rejestracja Service Workera dla wsparcia PWA
+    // System aktualizacji Service Workera
+    let newWorker;
+    const updateBanner = document.getElementById('updateBanner');
+    const updateBtn = document.getElementById('updateBtn');
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
           .then(registration => {
             console.log('Service Worker zarejestrowany pomyślnie.', registration.scope);
+            
+            // Logika sprawdzania nowej wersji co 24 godziny w tle
+            setInterval(() => {
+              registration.update();
+              console.log('[Service Worker] Automatyczne sprawdzanie nowej wersji (co 24h)...');
+            }, 86400000); // 24 * 60 * 60 * 1000 = 86400000 ms
+
+            // Nasłuchuj nowej wersji instancji SW
+            registration.addEventListener('updatefound', () => {
+              newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Nowa wersja pobrana i gotowa do instalacji, pokazujemy interfejs (UI)
+                  updateBanner.style.display = 'flex';
+                }
+              });
+            });
           })
           .catch(error => {
             console.error('Błąd rejestracji Service Workera:', error);
           });
+
+        // Wymuś odświeżenie strony po przejęciu kontroli przez nowego Service Workera
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!refreshing) {
+            window.location.reload();
+            refreshing = true;
+          }
+        });
       });
     }
 
-    const PRESET_GROUPS = {
-      "PESA": {
-        "ED74": {
-          label: "ED74",
-          length: 80.3,
-          mo: { prozny: 161, ladowny: 171 },
-          braking: { "R+Mg": { prozny: 0, ladowny: 0 }, "R": { prozny: 0, ladowny: 0 } }
-        },
-        "ED161": {
-          label: "ED161",
-          length: 150.2,
-          mo: { prozny: 249, ladowny: 278 },
-          braking: { "R+Mg": { prozny: 408, ladowny: 454 }, "R": { prozny: 386, ladowny: 430 } }
-        }
-      },
-      "STADLER": {
-        "ED160-stary": {
-          label: "ED160 STARY",
-          length: 152.9,
-          mo: { prozny: 252, ladowny: 281 },
-          braking: { "R+Mg": { prozny: 458, ladowny: 511 },
-           "R": { prozny: 426, ladowny: 475 } }
-        },
-        "ED160-nowy": {
-          label: "ED160 NOWY",
-          length: 152.9,
-          mo: { prozny: 252, ladowny: 281 },
-          braking: { "R+Mg": { prozny: 478, ladowny: 533 }, "R": { prozny: 428, ladowny: 477 } }
-        }
-      },
-      "ALSTOM": {
-        "ED250": {
-          label: "ED250",
-          length: 187.4,
-          mo: { prozny: 414, ladowny: 445 },
-          braking: { "R+Mg": 915, "R": 773 },
-          noLoadSplitForBraking: true
-        }
-      },
-       "SKPL": {
-         "SN84": {
-           label: "SN84 - SKPL",
-           length: 74.480,
-           mo: { prozny: 124, ladowny: 139 },
-           braking: { "R": { prozny: 209, ladowny: 209 } }
-         },
-         "SD85": {
-           label: "SD85 - SKPL",
-           length: 52.340,
-           mo: { prozny: 97, ladowny: 119 },
-           braking: { "R+Mg": { prozny: 143, ladowny: 143 }, "R": { prozny: 119, ladowny: 119 } }
-         }
-       }
-    };
+    updateBtn.addEventListener('click', () => {
+      if (newWorker) {
+        newWorker.postMessage({ action: 'skipWaiting' });
+      }
+    });
 
-    const PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
+    let PRESET_GROUPS = {};
+    let PRESETS = {};
 
     const presetButtons = document.getElementById('presetButtons');
     const addPresetBtn = document.getElementById('addPreset');
@@ -354,6 +367,42 @@
     let selectedVehicles = [];
     let userEditedMO = false;
     let userEditedMHR = false;
+
+    // Asynchroniczne ładowanie bazy pojazdów z pliku JSON
+    fetch('./zespoly_trakcyjne.json')
+      .then(response => {
+        if(!response.ok) throw new Error("Sieć odpowiedziała błędem podczas ładowania json.");
+        return response.json();
+      })
+      .then(data => {
+        PRESET_GROUPS = data;
+        PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
+        
+        // Wygeneruj przyciski po załadowaniu danych
+        Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
+          const groupHeader = document.createElement('div');
+          groupHeader.className = 'group-header';
+          groupHeader.textContent = groupName;
+          presetButtons.appendChild(groupHeader);
+
+          Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
+            const btn = document.createElement('button');
+            btn.className = 'vehicle-card';
+            btn.type = 'button';
+            btn.dataset.key = key;
+            btn.innerText = PRESETS[key].label;
+            btn.onclick = () => {
+              document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+            };
+            presetButtons.appendChild(btn);
+          });
+        });
+      })
+      .catch(error => {
+        console.error("Błąd podczas pobierania pojazdów:", error);
+        statusDiv.textContent = "Błąd pobierania bazy pojazdów. Sprawdź połączenie i odśwież stronę.";
+      });
 
     // Dynamiczne obliczanie wyników
     function calculateResults() {
@@ -389,26 +438,6 @@
             warningMsg.style.display = "block";
         }
     }
-
-    Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
-      const groupHeader = document.createElement('div');
-      groupHeader.className = 'group-header';
-      groupHeader.textContent = groupName;
-      presetButtons.appendChild(groupHeader);
-
-      Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
-        const btn = document.createElement('button');
-        btn.className = 'vehicle-card';
-        btn.type = 'button';
-        btn.dataset.key = key;
-        btn.innerText = PRESETS[key].label;
-        btn.onclick = () => {
-          document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        };
-        presetButtons.appendChild(btn);
-      });
-    });
 
     addPresetBtn.onclick = ()=>{
       const active = document.querySelector('.vehicle-card.active');
