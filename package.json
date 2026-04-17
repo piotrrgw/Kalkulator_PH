@@ -1,0 +1,20 @@
+{
+  "name": "kalkulator_ph",
+  "version": "1.0.0",
+  "description": "Profesjonalne narzędzie dla maszynistów i rewidentów taboru kolejowego, służące do szybkiego i precyzyjnego obliczania parametrów hamulcowych pociągu (MHW, Rzeczywisty % masy hamującej) oraz generowania danych do Karty Próby Hamulca.",
+  "homepage": "https://github.com/piotrrgw/Kalkulator_PH#readme",
+  "bugs": {
+    "url": "https://github.com/piotrrgw/Kalkulator_PH/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piotrrgw/Kalkulator_PH.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
