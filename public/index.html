@@ -37,14 +37,72 @@
     header{
       display:flex;
       align-items:center;
-      justify-content:center;
+      justify-content:space-between;
       gap:20px;
       margin-bottom:18px;
+      position: relative;
     }
-    h1{ margin:0; font-weight:700; font-size:22px; }
+    h1{ margin:0; font-weight:700; font-size:22px; flex: 1; text-align: center; }
+
+    /* MENU BURGER */
+    .burger-btn {
+      background: none; border: none; cursor: pointer; padding: 8px;
+      display: flex; flex-direction: column; gap: 5px; z-index: 1001;
+      border-radius: 6px; transition: background 0.2s;
+    }
+    .burger-btn:focus-visible { outline: 3px solid var(--cyan); }
+    .burger-btn span {
+      display: block; width: 25px; height: 3px; background: var(--dark-navy);
+      border-radius: 3px; transition: all 0.3s ease;
+    }
+    .burger-btn.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .burger-btn.open span:nth-child(2) { opacity: 0; }
+    .burger-btn.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    .side-menu {
+      position: fixed; top: 0; right: -300px; width: 280px; height: 100vh;
+      background: #fff; box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+      z-index: 1000; transition: right 0.3s ease; padding: 70px 20px 20px;
+      display: flex; flex-direction: column; gap: 15px;
+    }
+    .side-menu.open { right: 0; }
+    .side-menu-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4); z-index: 999; display: none; opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .side-menu-overlay.open { display: block; opacity: 1; }
+    
+    .menu-item {
+      padding: 14px; border: none; background: rgba(1,38,63,0.04);
+      border-radius: 8px; font-weight: 700; color: var(--dark-navy);
+      font-size: 15px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px;
+    }
+    .menu-item:hover { background: rgba(1,38,63,0.08); }
+    .menu-item:focus-visible { outline: 3px solid var(--cyan); }
+    .menu-item.danger { color: var(--danger); background: rgba(211,47,47,0.06); }
+    .menu-item.danger:hover { background: rgba(211,47,47,0.1); }
+
+    /* MODAL INSTRUKCJA */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(1,38,63,0.6); z-index: 1100; display: none;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: 12px; padding: 24px; max-width: 500px; width: 100%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; background: none; border: none;
+      font-size: 24px; font-weight: bold; cursor: pointer; color: var(--muted);
+    }
+    .modal h2 { margin-top: 0; color: var(--dark-navy); font-size: 20px; }
+    .modal p, .modal li { font-size: 14px; line-height: 1.6; color: var(--muted); margin-bottom: 10px; }
+    .modal ol { padding-left: 20px; }
 
     .container{ display:grid; grid-template-columns: 1fr 420px; gap:28px; }
-
     .card{ background:#fff; border-radius:12px; padding:18px; box-shadow: 0 8px 30px rgba(2,12,34,0.06); border:1px solid rgba(1,38,63,0.04); }
 
     .grid-table{ width:100%; display:grid; grid-template-columns: 320px 1fr; border:3px solid var(--dark-navy); border-radius:8px; overflow:hidden; }
@@ -61,16 +119,12 @@
       transition: border-color 0.2s, box-shadow 0.2s; width: 100%;
     }
     input:focus, select:focus {
-      outline: none;
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.2);
+      outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0, 157, 216, 0.2);
     }
 
     input.readonly, input[readonly] { 
       background:linear-gradient(180deg,#fff 0%, #f7fbff 100%); 
-      border:1px solid rgba(1,38,63,0.06); 
-      color: var(--dark-navy);
-      cursor: not-allowed;
+      border:1px solid rgba(1,38,63,0.06); color: var(--dark-navy); cursor: not-allowed;
     }
     
     .note{ font-size:12px;color:var(--muted);margin-top:4px; }
@@ -82,17 +136,9 @@
     }
     
     .warning-msg {
-      display: none;
-      color: var(--danger);
-      font-weight: 800;
-      font-size: 13px;
-      margin-top: 8px;
-      padding: 10px;
-      border: 2px dashed var(--danger);
-      border-radius: 8px;
-      background: #fffafa;
-      animation: pulse-warning 2s infinite ease-in-out;
-      text-align: center;
+      display: none; color: var(--danger); font-weight: 800; font-size: 13px; margin-top: 8px;
+      padding: 10px; border: 2px dashed var(--danger); border-radius: 8px;
+      background: #fffafa; animation: pulse-warning 2s infinite ease-in-out; text-align: center;
     }
 
     .presets{ display:flex; flex-direction:column; gap:14px; }
@@ -101,7 +147,6 @@
     .presets h3{ margin:6px 0 10px 0; font-size:16px; color:var(--dark-navy) }
     .group-header{ width:100%; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; margin:12px 0 4px 0; letter-spacing:0.5px; }
 
-    /* Zakładki (taby) */
     .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: rgba(1,38,63,0.04); padding: 6px; border-radius: 12px; }
     .tab-btn { 
       flex: 1; padding: 10px 6px; border: none; background: transparent; border-radius: 8px; 
@@ -163,6 +208,7 @@
       select.small, button.small{ width:100% !important; }
       .update-banner { flex-direction: column; text-align: center; }
       .update-banner .btn { width: 100%; }
+      h1 { font-size: 18px; }
     }
   </style>
 </head>
@@ -172,7 +218,45 @@
     <button id="updateBtn" class="btn add">Aktualizuj i odśwież</button>
   </div>
 
-  <header><h1>Kalkulator karty próby hamulca</h1></header>
+  <header>
+    <div style="width: 40px;"></div> 
+    <h1>Kalkulator karty próby hamulca</h1>
+    <button id="burgerBtn" class="burger-btn" aria-label="Otwórz menu opcji" aria-expanded="false" aria-controls="sideMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div id="sideMenuOverlay" class="side-menu-overlay" aria-hidden="true"></div>
+
+  <nav id="sideMenu" class="side-menu" aria-hidden="true">
+    <button id="menuRefreshDbBtn" class="menu-item">
+      <span>🔄</span> Odśwież bazę pojazdów
+    </button>
+    <button id="menuInstructionBtn" class="menu-item">
+      <span>📖</span> Instrukcja obsługi
+    </button>
+    <button id="menuResetAppBtn" class="menu-item danger" style="margin-top: auto;">
+      <span>⚠️</span> Resetuj aplikację
+    </button>
+  </nav>
+
+  <div id="instructionModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button id="closeModalBtn" class="modal-close" aria-label="Zamknij instrukcję">×</button>
+      <h2 id="modalTitle">Instrukcja obsługi kalkulatora</h2>
+      <p>Kalkulator służy do szybkiego i bezbłędnego obliczania mas hamujących oraz weryfikacji procentów rzeczywistych dla wprowadzanych składów.</p>
+      <ol>
+        <li><strong>Wybierz tryb pracy:</strong> Korzystaj z gotowej bazy pojazdów (np. Składy Zespolone) lub wprowadź parametry całkowicie ręcznie w zakładce z ikoną ✍️.</li>
+        <li><strong>Dodawanie do składu:</strong> Jeśli korzystasz z bazy, zaznacz pojazd i kliknij „Dodaj skład”. Pojawi się on na liście poniżej.</li>
+        <li><strong>Parametry pojazdu:</strong> W każdym dodanym pojeździe na liście możesz zmienić opcję załadowania (np. Próżny/Ładowny) oraz aktywny rodzaj hamulca.</li>
+        <li><strong>Wymagany Procent:</strong> Niezależnie od wybranego trybu, musisz wprowadzić <i>Wymagany procent z WRJ (PW)</i> w polu na dole panelu bocznego, aby kalkulator mógł porównać parametry.</li>
+        <li><strong>Wyniki:</strong> Główna tabela na bieżąco przelicza wartości (Masę Hamującą Wymaganą oraz Rzeczywistą). Czerwony komunikat ostrzegawczy pojawi się, gdy masa lub procent rzeczywisty nie spełniają wytycznych.</li>
+      </ol>
+      <p style="text-align: center; margin-top: 20px;">
+        <button id="closeModalBtn2" class="btn add" style="width: 100%;">Zrozumiałem</button>
+      </p>
+    </div>
+  </div>
 
   <main class="container">
     <section class="card calculator-panel">
@@ -257,7 +341,7 @@
       <div id="status" class="errors" role="alert" aria-live="assertive"></div>
 
       <footer>
-        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.11.1
+        <span id="copyright"></span> Stworzone przez <strong>Gemini</strong> oraz <strong>Piotr M 🚂</strong> | Wersja aplikacji: v3.11.2
       </footer>
     </section>
 
@@ -293,8 +377,8 @@
             <span style="font-size: 36px; display: block; margin-bottom: 8px;">🚧 👷‍♂️</span>
             <strong>Opcja w trakcie tworzenia</strong><br><br>
             Jeśli chcesz pomóc uzupełnić bazę zapraszamy do współpracy.<br><BR>
-            <a href="https://pojazdy-trakcyjne.web.app/">
-           <button  class="btn add" style="flex:1;""><strong>FORMULARZ DODAWANIA LOKOMOTYWY<BR>DO BAZY</strong></button>
+            <a href="https://pojazdy-trakcyjne.web.app/" target="_blank" rel="noopener">
+              <button class="btn add" style="width:100%;"><strong>FORMULARZ DODAWANIA LOKOMOTYWY<BR>DO BAZY</strong></button>
             </a><br><br>
             Baza lokomotyw pojawi się w kolejnej aktualizacji aplikacji.
           </div>
@@ -363,6 +447,12 @@
   </main>
 
   <script>
+    // System dynamicznego dodawania baz w przyszłości
+    const JSON_DATABASES = [
+        './zespoly_trakcyjne.json'
+        // Kolejne bazy można dodawać jako kolejne stringi w tej tablicy
+    ];
+
     // Główne pola wyników (wszystkie readonly)
     const masaPociaguInput = document.getElementById('masa-pociagu');
     const masaRzeczywistaInput = document.getElementById('masa-rzeczywista');
@@ -376,6 +466,80 @@
 
     // Pole z zakładki podsumowania taboru
     const presetPwInput = document.getElementById('preset-pw');
+
+    // Obsługa Menu Burger i Modala
+    const burgerBtn = document.getElementById('burgerBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    const sideMenuOverlay = document.getElementById('sideMenuOverlay');
+    const menuRefreshDbBtn = document.getElementById('menuRefreshDbBtn');
+    const menuInstructionBtn = document.getElementById('menuInstructionBtn');
+    const menuResetAppBtn = document.getElementById('menuResetAppBtn');
+    const instructionModal = document.getElementById('instructionModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const closeModalBtn2 = document.getElementById('closeModalBtn2');
+
+    function toggleMenu() {
+        const isOpen = sideMenu.classList.contains('open');
+        if (isOpen) {
+            sideMenu.classList.remove('open');
+            sideMenuOverlay.classList.remove('open');
+            burgerBtn.classList.remove('open');
+            burgerBtn.setAttribute('aria-expanded', 'false');
+            sideMenu.setAttribute('aria-hidden', 'true');
+        } else {
+            sideMenu.classList.add('open');
+            sideMenuOverlay.classList.add('open');
+            burgerBtn.classList.add('open');
+            burgerBtn.setAttribute('aria-expanded', 'true');
+            sideMenu.setAttribute('aria-hidden', 'false');
+        }
+    }
+
+    function openModal() {
+        toggleMenu(); // Zamknij menu jeśli otwarte
+        instructionModal.classList.add('open');
+        closeModalBtn.focus();
+    }
+
+    function closeModal() {
+        instructionModal.classList.remove('open');
+        burgerBtn.focus();
+    }
+
+    burgerBtn.addEventListener('click', toggleMenu);
+    sideMenuOverlay.addEventListener('click', toggleMenu);
+    menuInstructionBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    closeModalBtn2.addEventListener('click', closeModal);
+
+    // Czyszczenie całkowite z interfejsu (Reset aplikacji)
+    menuResetAppBtn.addEventListener('click', async () => {
+        if(!confirm("Czy na pewno chcesz zresetować aplikację? Usunie to dane offline i wyczyści pamięć przeglądarki.")) return;
+        
+        try {
+            if ('caches' in window) {
+                const keys = await caches.keys();
+                await Promise.all(keys.map(key => caches.delete(key)));
+            }
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let reg of registrations) {
+                    await reg.unregister();
+                }
+            }
+            window.location.reload(true);
+        } catch (e) {
+            alert("Błąd podczas resetowania.");
+            console.error(e);
+        }
+    });
+
+    // Odświeżenie samej bazy z obejściem cache
+    menuRefreshDbBtn.addEventListener('click', () => {
+        toggleMenu();
+        loadDatabases(true); // force refresh
+    });
+
 
     // --- Obsługa zakładek (Tabów) ---
     const tabZespoly = document.getElementById('tab-zespoly');
@@ -394,23 +558,14 @@
       [panelZespoly, panelLokomotywy, panelRecznie].forEach(p => p.setAttribute('hidden', ''));
 
       if(tabName === 'zespoly') {
-        tabZespoly.setAttribute('aria-selected', 'true');
-        tabZespoly.classList.add('active');
-        panelZespoly.removeAttribute('hidden');
-        summaryPanel.style.display = 'block';
-        renderList(); 
+        tabZespoly.setAttribute('aria-selected', 'true'); tabZespoly.classList.add('active');
+        panelZespoly.removeAttribute('hidden'); summaryPanel.style.display = 'block'; renderList(); 
       } else if(tabName === 'lokomotywy') {
-        tabLokomotywy.setAttribute('aria-selected', 'true');
-        tabLokomotywy.classList.add('active');
-        panelLokomotywy.removeAttribute('hidden');
-        summaryPanel.style.display = 'block';
-        renderList();
+        tabLokomotywy.setAttribute('aria-selected', 'true'); tabLokomotywy.classList.add('active');
+        panelLokomotywy.removeAttribute('hidden'); summaryPanel.style.display = 'block'; renderList();
       } else if(tabName === 'recznie') {
-        tabRecznie.setAttribute('aria-selected', 'true');
-        tabRecznie.classList.add('active');
-        panelRecznie.removeAttribute('hidden');
-        summaryPanel.style.display = 'none'; 
-        syncManualToMain(); 
+        tabRecznie.setAttribute('aria-selected', 'true'); tabRecznie.classList.add('active');
+        panelRecznie.removeAttribute('hidden'); summaryPanel.style.display = 'none'; syncManualToMain(); 
       }
     }
 
@@ -418,21 +573,14 @@
     tabLokomotywy.addEventListener('click', () => switchTab('lokomotywy'));
     tabRecznie.addEventListener('click', () => switchTab('recznie'));
 
-    // Bliźniacza synchronizacja pola PW między oknami, by nie tracić danych po zmianie zakładki
+    // Bliźniacza synchronizacja pola PW
     function syncPwFromPreset() {
-        manualPwInput.value = presetPwInput.value;
-        percentWymaganeInput.value = presetPwInput.value;
-        calculateResults();
+        manualPwInput.value = presetPwInput.value; percentWymaganeInput.value = presetPwInput.value; calculateResults();
     }
-
     function syncPwFromManual() {
-        presetPwInput.value = manualPwInput.value;
-        percentWymaganeInput.value = manualPwInput.value;
-        calculateResults();
+        presetPwInput.value = manualPwInput.value; percentWymaganeInput.value = manualPwInput.value; calculateResults();
     }
-
-    presetPwInput.oninput = syncPwFromPreset;
-    manualPwInput.oninput = syncPwFromManual;
+    presetPwInput.oninput = syncPwFromPreset; manualPwInput.oninput = syncPwFromManual;
 
     // Synchronizacja zakładki "Ręcznie" z głównym formularzem
     function syncManualToMain() {
@@ -443,18 +591,11 @@
             calculateResults();
         }
     }
-
-    manualMoInput.oninput = syncManualToMain;
-    manualMhrInput.oninput = syncManualToMain;
-
+    manualMoInput.oninput = syncManualToMain; manualMhrInput.oninput = syncManualToMain;
     clearManualBtn.onclick = () => {
-        manualMoInput.value = "";
-        manualMhrInput.value = "";
-        manualPwInput.value = "";
-        presetPwInput.value = ""; // Czyści oba pola PW dla spójności
+        manualMoInput.value = ""; manualMhrInput.value = ""; manualPwInput.value = ""; presetPwInput.value = ""; 
         syncManualToMain();
     };
-    // ---------------------------------
 
     // System aktualizacji Service Workera
     let newWorker;
@@ -509,36 +650,68 @@
 
     let selectedVehicles = [];
 
-    // Pobieranie danych z JSON
-    fetch('./zespoly_trakcyjne.json')
-      .then(r => r.json())
-      .then(data => {
-        PRESET_GROUPS = data;
-        PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
+    // Funkcja wielokrotnego pobierania plików baz JSON
+    function loadDatabases(forceRefresh = false) {
+        statusDiv.textContent = forceRefresh ? "Odświeżanie bazy pojazdów..." : "Ładowanie danych...";
         
-        Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
-          const groupHeader = document.createElement('div');
-          groupHeader.className = 'group-header';
-          groupHeader.textContent = groupName;
-          presetButtons.appendChild(groupHeader);
-
-          Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
-            const btn = document.createElement('button');
-            btn.className = 'vehicle-card';
-            btn.type = 'button';
-            btn.dataset.key = key;
-            btn.innerText = PRESETS[key].label;
-            btn.onclick = () => {
-              document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-            };
-            presetButtons.appendChild(btn);
-          });
+        const fetchPromises = JSON_DATABASES.map(url => {
+            // Unikamy zapytania do cache w przypadku wymuszonego odświeżenia
+            const fetchUrl = forceRefresh ? `${url}?v=${Date.now()}` : url;
+            const fetchOptions = forceRefresh ? { cache: 'no-store' } : {};
+            
+            return fetch(fetchUrl, fetchOptions).then(r => {
+                if(!r.ok) throw new Error(`Błąd pliku ${url}`);
+                return r.json();
+            });
         });
-      })
-      .catch(error => {
-        statusDiv.textContent = "Błąd pobierania bazy pojazdów.";
-      });
+
+        Promise.all(fetchPromises)
+            .then(results => {
+                PRESET_GROUPS = {};
+                PRESETS = {};
+                presetButtons.innerHTML = "";
+
+                // Scalanie wielu json-ów z bazy, jeśli pojawi się ich więcej
+                results.forEach(data => {
+                    for(const group in data) {
+                        if(!PRESET_GROUPS[group]) PRESET_GROUPS[group] = {};
+                        Object.assign(PRESET_GROUPS[group], data[group]);
+                    }
+                });
+
+                PRESETS = Object.values(PRESET_GROUPS).reduce((acc, group) => ({ ...acc, ...group }), {});
+                
+                Object.keys(PRESET_GROUPS).sort().forEach(groupName => {
+                    const groupHeader = document.createElement('div');
+                    groupHeader.className = 'group-header';
+                    groupHeader.textContent = groupName;
+                    presetButtons.appendChild(groupHeader);
+
+                    Object.keys(PRESET_GROUPS[groupName]).forEach(key => {
+                        const btn = document.createElement('button');
+                        btn.className = 'vehicle-card';
+                        btn.type = 'button';
+                        btn.dataset.key = key;
+                        btn.innerText = PRESETS[key].label;
+                        btn.onclick = () => {
+                            document.querySelectorAll('.vehicle-card').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                        };
+                        presetButtons.appendChild(btn);
+                    });
+                });
+                
+                statusDiv.textContent = "";
+                if(forceRefresh) alert("Baza pojazdów została pomyślnie zaktualizowana!");
+            })
+            .catch(error => {
+                statusDiv.textContent = "Błąd pobierania bazy pojazdów. Sprawdź połączenie z siecią.";
+                console.error(error);
+            });
+    }
+
+    // Inicjacja pobierania przy starcie strony
+    loadDatabases();
 
     function calculateResults() {
         statusDiv.textContent = "";
@@ -592,100 +765,60 @@
     function renderList(){
       selectedList.innerHTML="";
       if(!selectedVehicles.length){ 
-        const emptyDiv = document.createElement('div');
-        emptyDiv.textContent = 'Brak dodanych pojazdów.';
-        emptyDiv.style.color = 'var(--muted)';
-        selectedList.appendChild(emptyDiv);
+        const emptyDiv = document.createElement('div'); emptyDiv.textContent = 'Brak dodanych pojazdów.';
+        emptyDiv.style.color = 'var(--muted)'; selectedList.appendChild(emptyDiv);
       }
       selectedVehicles.forEach(v=>{
         const p = PRESETS[v.presetKey];
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'selected-item';
+        const itemDiv = document.createElement('div'); itemDiv.className = 'selected-item';
 
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'selected-item-info';
-        
-        const labelDiv = document.createElement('div');
-        labelDiv.style.fontWeight = '800';
-        labelDiv.textContent = p.label;
-        
-        const detailsDiv = document.createElement('div');
-        detailsDiv.style.fontSize = '13px';
-        detailsDiv.style.color = 'var(--muted)';
+        const infoDiv = document.createElement('div'); infoDiv.className = 'selected-item-info';
+        const labelDiv = document.createElement('div'); labelDiv.style.fontWeight = '800'; labelDiv.textContent = p.label;
+        const detailsDiv = document.createElement('div'); detailsDiv.style.fontSize = '13px'; detailsDiv.style.color = 'var(--muted)';
         detailsDiv.textContent = `Dł: ${p.length}m — MO: ${p.mo[v.loadState]} t — Mhr: ${brakingMass(v)} t`;
         infoDiv.append(labelDiv, detailsDiv);
 
-        const controlsDiv = document.createElement('div');
-        controlsDiv.className = 'selected-item-controls';
+        const controlsDiv = document.createElement('div'); controlsDiv.className = 'selected-item-controls';
 
-        const loadSelect = document.createElement('select');
-        loadSelect.className = 'small load';
+        const loadSelect = document.createElement('select'); loadSelect.className = 'small load';
         loadSelect.innerHTML = `<option value="prozny">Próżny</option><option value="ladowny">Ładowny</option>`;
         loadSelect.value = v.loadState;
         loadSelect.onchange = e => { v.loadState = e.target.value; renderList(); };
 
-        const brakeSelect = document.createElement('select');
-        brakeSelect.className = 'small brake';
+        const brakeSelect = document.createElement('select'); brakeSelect.className = 'small brake';
         brakeSelect.innerHTML = Object.keys(p.braking).map(b => `<option value="${b}">${b}</option>`).join('');
         brakeSelect.value = v.brakingSetting;
         brakeSelect.onchange = e => { v.brakingSetting = e.target.value; renderList(); };
 
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'btn remove small';
-        removeBtn.textContent = 'Usuń';
-        removeBtn.onclick = () => {
-          selectedVehicles = selectedVehicles.filter(x => x.id !== v.id);
-          renderList();
-        };
+        const removeBtn = document.createElement('button'); removeBtn.className = 'btn remove small'; removeBtn.textContent = 'Usuń';
+        removeBtn.onclick = () => { selectedVehicles = selectedVehicles.filter(x => x.id !== v.id); renderList(); };
 
-        controlsDiv.append(loadSelect, brakeSelect, removeBtn);
-        itemDiv.append(infoDiv, controlsDiv);
-        selectedList.appendChild(itemDiv);
+        controlsDiv.append(loadSelect, brakeSelect, removeBtn); itemDiv.append(infoDiv, controlsDiv); selectedList.appendChild(itemDiv);
       });
 
       const mo=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].mo[v.loadState],0);
       const mhr=selectedVehicles.reduce((s,v)=>s+brakingMass(v),0);
       const len=selectedVehicles.reduce((s,v)=>s+PRESETS[v.presetKey].length,0);
 
-      sumMoEl.textContent=mo.toFixed(1);
-      sumMhrEl.textContent=mhr.toFixed(1);
-      sumLenEl.textContent=Math.ceil(len);
+      sumMoEl.textContent=mo.toFixed(1); sumMhrEl.textContent=mhr.toFixed(1); sumLenEl.textContent=Math.ceil(len);
 
       if(!tabRecznie.classList.contains('active')) {
-          masaPociaguInput.value=mo.toFixed(1);
-          masaRzeczywistaInput.value=mhr.toFixed(1);
-          
+          masaPociaguInput.value=mo.toFixed(1); masaRzeczywistaInput.value=mhr.toFixed(1);
           if (selectedVehicles.length > 0) {
-            dlugoscSkladuRow.style.display = 'contents';
-            dlugoscSkladuField.value = Math.ceil(len);
+            dlugoscSkladuRow.style.display = 'contents'; dlugoscSkladuField.value = Math.ceil(len);
           } else {
             dlugoscSkladuRow.style.display = 'none';
           }
       }
-
       calculateResults();
     }
 
     function resetAllData() {
-      // Czyszczenie bazy
       selectedVehicles = [];
-      // Czyszczenie ręcznych
-      manualMoInput.value = "";
-      manualMhrInput.value = "";
-      manualPwInput.value = "";
-      presetPwInput.value = "";
-      // Czyszczenie gównego PW
+      manualMoInput.value = ""; manualMhrInput.value = ""; manualPwInput.value = ""; presetPwInput.value = "";
       percentWymaganeInput.value = "";
-      
-      statusDiv.textContent = "";
-      warningMsg.style.display = "none";
-      
-      // Odświeżenie w zależności od wybranej zakładki
-      if(tabRecznie.classList.contains('active')) {
-          syncManualToMain();
-      } else {
-          renderList();
-      }
+      statusDiv.textContent = ""; warningMsg.style.display = "none";
+      if(tabRecznie.classList.contains('active')) { syncManualToMain(); } else { renderList(); }
     }
 
     resetBtn.onclick = resetAllData;
@@ -694,6 +827,5 @@
     renderList();
     document.getElementById('copyright').textContent = `© ${new Date().getFullYear()} Kalkulator PH.`
   </script>
-
 </body>
 </html>
