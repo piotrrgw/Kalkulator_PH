@@ -1,5 +1,5 @@
-// Wersja aplikacji: v3.11.2
-const CACHE_NAME = 'kalkulator-ph-v3.11.2';
+// Wersja aplikacji: v3.11.3
+const CACHE_NAME = 'kalkulator-ph-v3.11.3';
 
 // Najważniejsze pliki niezbędne do działania offline
 const ASSETS = [

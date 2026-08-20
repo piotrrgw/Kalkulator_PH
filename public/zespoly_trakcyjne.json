@@ -39,7 +39,7 @@
   "SKPL": {
     "SN84": {
       "label": "SN84 - SKPL",
-      "length": 74.480,
+      "length": 79.480,
       "mo": { "prozny": 124, "ladowny": 139 },
       "braking": { "R": { "prozny": 209, "ladowny": 209 } }
     },
