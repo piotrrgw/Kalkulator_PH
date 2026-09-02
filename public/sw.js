@@ -15,7 +15,7 @@ const ASSETS = [
 self.addEventListener('install', (e) => {
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Zapisywanie plików do pamięci v3.11.2...');
+      console.log('[Service Worker] Zapisywanie plików do pamięci v3.11.3...');
       return Promise.all(
         ASSETS.map(asset => {
           return cache.add(asset).catch(error => {
@@ -27,14 +27,14 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// Nasłuchiwanie na polecenie wymuszenia aktualizacji ze strony użytkownika (kliknięcie Aktualizuj)
+// Nasłuchiwanie na polecenie wymuszenia aktualizacji ze strony użytkownika
 self.addEventListener('message', (event) => {
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }
 });
 
-// 2. Czyszczenie starego cache (niezbędne, aby użytkownicy widzieli nowe wersje)
+// 2. Czyszczenie starego cache
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keyList) => {
@@ -49,7 +49,7 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-// 3. Obsługa żądań HTTP (serwowanie z cache lub sieci)
+// 3. Obsługa żądań HTTP
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((response) => {
